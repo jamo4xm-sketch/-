@@ -7,17 +7,18 @@
   --bg:#f3f6f6; --surface:#ffffff; --fg:#14282b; --muted:#56696c; --line:#d5dedf;
   --accent:#0b6b6f; --accent-soft:#dcecec; --on-accent:#ffffff;
   --gold:#f2d27a; --silver:#cfd8dc; --bronze:#e3b48f; --dev:#f1c3bd; --none:#e9eeee;
+  --good:#1f7a43; --bad:#b0412f;
   --display:"Readex Pro","IBM Plex Sans Arabic",Tahoma,sans-serif;
   --body:"IBM Plex Sans Arabic",Tahoma,"Segoe UI",sans-serif;
 }
 @media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
   --bg:#0f1a1c; --surface:#17262a; --fg:#e6eeee; --muted:#9fb1b3; --line:#2c3f43;
   --accent:#5cc3c0; --accent-soft:#1d3a3c; --on-accent:#0b1b1c;
-  --gold:#7a6220; --silver:#4a575c; --bronze:#7a4f2e; --dev:#6e3a35; --none:#1e2e31; color-scheme:dark } }
+  --gold:#7a6220; --silver:#4a575c; --bronze:#7a4f2e; --dev:#6e3a35; --none:#1e2e31; --good:#6fd39a; --bad:#f08a7a; color-scheme:dark } }
 :root[data-theme="dark"]{
   --bg:#0f1a1c; --surface:#17262a; --fg:#e6eeee; --muted:#9fb1b3; --line:#2c3f43;
   --accent:#5cc3c0; --accent-soft:#1d3a3c; --on-accent:#0b1b1c;
-  --gold:#7a6220; --silver:#4a575c; --bronze:#7a4f2e; --dev:#6e3a35; --none:#1e2e31; color-scheme:dark }
+  --gold:#7a6220; --silver:#4a575c; --bronze:#7a4f2e; --dev:#6e3a35; --none:#1e2e31; --good:#6fd39a; --bad:#f08a7a; color-scheme:dark }
 
 body{background:var(--bg);color:var(--fg);font-family:var(--body);font-size:16px;line-height:1.8}
 .page{padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:28px 64px}
@@ -74,16 +75,23 @@ select{font:inherit;padding:4px 8px;border-radius:6px;border:1px solid var(--lin
 textarea{font:inherit;width:100%;box-sizing:border-box;min-height:120px;padding:10px;border-radius:8px;border:1px solid var(--line);background:var(--surface);color:var(--fg)}
 .btn{font:inherit;font-weight:600;background:var(--accent);color:var(--on-accent);border:0;border-radius:8px;padding:6px 16px;cursor:pointer;margin-top:8px}
 .q li{margin-bottom:8px}
+.hl{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin:12px 0}
+.hl>div{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:12px 14px;min-width:0}
+.hl .k{font-size:.85rem;color:var(--muted)}
+.hl .v{font-family:var(--display);font-weight:600;font-size:1.1rem}
+.up{color:var(--good);font-weight:600}.down{color:var(--bad);font-weight:600}
+#results-table td{white-space:nowrap}
+#results-table tr.top td{font-weight:600}
 </style>
 
 <div class="page" dir="rtl" lang="ar">
 <div class="col">
-  <p class="small" style="margin:0">نموذج أولي للنقاش · نسخة 0.1</p>
+  <p class="small" style="margin:0">نموذج أولي للنقاش · نسخة 0.2</p>
   <h1>ميزان الجماعات الطلابية</h1>
   <p class="lead">نظام موحّد تقيّم به شؤون الطلبة جماعات كل الفروع بمعايير واحدة، حتى تتقارب مستوياتها وتحصد جوائز أكثر خارج الجامعة.</p>
   <div class="note">كل الأرقام والفروع في هذه الصفحة <b>بيانات تجريبية للتوضيح</b> وليست تقييمًا حقيقيًا لأي جماعة. الأوزان والحدود مقترحات أولية تُعدَّل بعد ملاحظاتكم.</div>
   <nav class="toc" aria-label="أقسام الصفحة">
-    <a href="#idea">الفكرة</a><a href="#flow">آلية العمل</a><a href="#criteria">المعايير</a><a href="#levels">المستويات والحوافز</a><a href="#demo">اللوحة التجريبية</a><a href="#year">الدورة السنوية</a><a href="#discuss">أسئلة للنقاش</a>
+    <a href="#idea">الفكرة</a><a href="#flow">آلية العمل</a><a href="#criteria">المعايير</a><a href="#levels">المستويات والحوافز</a><a href="#notes-ded">الملاحظات والخصم</a><a href="#results">النتائج المعلنة</a><a href="#demo">لوحة الإدارة</a><a href="#year">الدورة السنوية</a><a href="#discuss">أسئلة للنقاش</a>
   </nav>
 
   <section id="idea">
@@ -100,6 +108,8 @@ textarea{font:inherit;width:100%;box-sizing:border-box;min-height:120px;padding:
       <li><b>تقييم سنوي</b> ينتهي بمستوى معلن لكل جماعة: ذهبي، فضي، برونزي، قيد التطوير.</li>
       <li><b>مقارنة الجماعة بنظيراتها</b> في الفروع الأخرى، وربط الأضعف بالأقوى لنقل الخبرة.</li>
       <li><b>حوافز</b> تجعل المستوى الأعلى يستحق السعي: أولوية في الدعم وفي تمثيل الجامعة.</li>
+      <li><b>نتائج معلنة لكل الجماعات</b>: في نهاية السنة ترى كل جماعة ترتيبها بين نظيراتها، ويعرف الجميع من تميّز العام الماضي ومن تميّز هذا العام.</li>
+      <li><b>ملاحظات تُخصم من الدرجة</b> عند وجود مخالفة أو تقصير موثّق، فتنزل الجماعة في الترتيب والمستوى.</li>
     </ul>
   </section>
 
@@ -117,6 +127,7 @@ textarea{font:inherit;width:100%;box-sizing:border-box;min-height:120px;padding:
   <section id="criteria">
     <h2>المعايير</h2>
     <p>سبعة معايير مجموعها 100. المعايير نفسها لكل الجماعات، والاختلاف في نوع الإنجاز الذي يُحتسب لكل مجال.</p>
+    <p><b>الدرجة النهائية = مجموع المعايير − خصم الملاحظات.</b></p>
     <div class="tw"><table>
       <thead><tr><th>المعيار</th><th class="n">الوزن</th><th>كيف يُقاس</th></tr></thead>
       <tbody>
@@ -170,7 +181,7 @@ textarea{font:inherit;width:100%;box-sizing:border-box;min-height:120px;padding:
   <section id="levels">
     <h2>المستويات والحوافز</h2>
     <div class="tw"><table>
-      <thead><tr><th>المستوى</th><th class="n">الدرجة</th><th>ما يترتب عليه</th></tr></thead>
+      <thead><tr><th>المستوى</th><th class="n">الدرجة النهائية</th><th>ما يترتب عليه</th></tr></thead>
       <tbody>
         <tr><td><span class="chip lv-g">ذهبي</span></td><td class="n">85 فأعلى</td><td>أولوية في الدعم المالي وتمثيل الجامعة خارجيًا، ترشّح لجائزة جماعة العام، وترشد جماعة نظيرة في فرع آخر.</td></tr>
         <tr><td><span class="chip lv-s">فضي</span></td><td class="n">70–84</td><td>دعم كامل، وأولوية في حجز القاعات والمرافق.</td></tr>
@@ -187,11 +198,49 @@ textarea{font:inherit;width:100%;box-sizing:border-box;min-height:120px;padding:
     </ul>
     <p>الجماعة التي لا تحقق الحد الأدنى تحصل على دعم ومتابعة أولًا. الجماعة الجديدة تُقيَّم في مسار "ناشئة" في سنتها الأولى ولا تُقارن بالجماعات القديمة.</p>
   </section>
+
+  <section id="notes-ded">
+    <h2>الملاحظات وخصم الدرجات</h2>
+    <p>بدل النقاط السوداء، تسجّل الإدارة <b>ملاحظة</b> على الجماعة عند وجود مخالفة أو تقصير موثّق. كل ملاحظة تُخصم من الدرجة النهائية، فتنزل الجماعة في الترتيب وقد تنزل في المستوى.</p>
+    <div class="tw"><table>
+      <thead><tr><th>نوع الملاحظة</th><th>أمثلة</th><th class="n">الخصم</th></tr></thead>
+      <tbody>
+        <tr><td><b>بسيطة</b></td><td>تأخر في تسليم تقرير، نقص في التوثيق، غياب عن اجتماع إلزامي</td><td class="n">1−</td></tr>
+        <tr><td><b>متوسطة</b></td><td>إلغاء فعالية دون إشعار، صرف غير موثّق، عدم الالتزام بالخطة المعتمدة</td><td class="n">3−</td></tr>
+        <tr><td><b>جسيمة</b></td><td>سلوك مخالف للآداب أو اللوائح، إخلال بالسلامة، إساءة لسمعة الجامعة</td><td class="n">6−<br><span class="small">ولا تتجاوز الجماعة المستوى الفضي تلك السنة</span></td></tr>
+      </tbody>
+    </table></div>
+    <h3 style="margin-top:18px">كيف تُسجَّل الملاحظة</h3>
+    <ol class="steps" style="margin-top:10px">
+      <li><b>تُرفع مع الدليل</b><span>المشرف أو شؤون الطلبة يسجّل الملاحظة ويرفق ما يثبتها.</span></li>
+      <li><b>الجماعة ترد</b><span>تظهر الملاحظة للجماعة، ولها 7 أيام لتوضيح موقفها.</span></li>
+      <li><b>الاعتماد</b><span>شؤون الطلبة تعتمد الملاحظة أو تلغيها. المعتمدة فقط تُخصم.</span></li>
+      <li><b>المعالجة</b><span>إذا عالجت الجماعة السبب في وقته يُعاد نصف الخصم.</span></li>
+    </ol>
+    <ul style="margin-top:12px">
+      <li>أقصى خصم في السنة 15 درجة، والملاحظات تبدأ من الصفر مع كل سنة جديدة.</li>
+      <li>في النتائج المعلنة يظهر عدد الملاحظات ومقدار الخصم فقط. التفاصيل تبقى بين الجماعة والإدارة.</li>
+      <li>المخالفة الجسيمة تُحال أيضًا إلى الإجراءات التأديبية المعمول بها في الجامعة.</li>
+    </ul>
+  </section>
 </div>
 
 <div class="wide">
+  <section id="results">
+    <h2>النتائج المعلنة</h2>
+    <p>في نهاية كل سنة تُعلن النتائج لكل الجماعات. كل جماعة ترى ترتيبها بين نظيراتها في الفروع الأخرى، وتعرف أين كانت العام الماضي وأين صارت.</p>
+    <div class="controls"><label for="club">الجماعة <select id="club"></select></label></div>
+    <div class="hl">
+      <div><div class="k">بطل هذا العام</div><div class="v" id="hl-now"></div></div>
+      <div><div class="k">بطل العام الماضي</div><div class="v" id="hl-last"></div></div>
+      <div><div class="k">الأكثر تقدّمًا</div><div class="v" id="hl-up"></div></div>
+    </div>
+    <div class="tw"><table id="results-table"></table></div>
+    <p class="small">بيانات تجريبية للتوضيح. التغيّر يقارن مركز الجماعة بمركزها في العام الماضي.</p>
+  </section>
+
   <section id="demo">
-    <h2>اللوحة التجريبية</h2>
+    <h2>لوحة الإدارة</h2>
     <p>هكذا ترى الإدارة المركزية كل الفروع. اضغط على أي خانة لترى تفاصيل الجماعة. الخانة الفارغة تعني أن الجماعة غير موجودة في ذلك الفرع.</p>
     <div class="controls">
       <label for="cat">المجال <select id="cat"></select></label>
@@ -214,8 +263,8 @@ textarea{font:inherit;width:100%;box-sizing:border-box;min-height:120px;padding:
       <tbody>
         <tr><td>بداية السنة</td><td>تسجيل الجماعات، تدريب القيادات الجديدة، رفع الخطة السنوية.</td></tr>
         <tr><td>خلال الفصلين</td><td>الجماعة توثّق كل فعالية ومشاركة خلال أسبوعين من حدوثها، والمشرف يعتمد.</td></tr>
-        <tr><td>نهاية الفصل الأول</td><td>مراجعة مرحلية غير معلنة: كل جماعة ترى درجتها الحالية وما ينقصها.</td></tr>
-        <tr><td>نهاية السنة</td><td>التقييم النهائي، إعلان المستويات، حفل التكريم، وتسليم القيادة.</td></tr>
+        <tr><td>نهاية الفصل الأول</td><td>مراجعة مرحلية غير معلنة: كل جماعة ترى درجتها الحالية وملاحظاتها وما ينقصها.</td></tr>
+        <tr><td>نهاية السنة</td><td>التقييم النهائي، إعلان النتائج والترتيب لكل الجماعات، تكريم بطل كل جماعة والأكثر تقدّمًا، وتسليم القيادة.</td></tr>
       </tbody>
     </table></div>
   </section>
@@ -227,7 +276,8 @@ textarea{font:inherit;width:100%;box-sizing:border-box;min-height:120px;padding:
       <li>هل الأوزان مناسبة؟ هل 25 للجوائز الخارجية كثيرة أم قليلة؟</li>
       <li>من يقيّم جودة الفعاليات: موظف شؤون الطلبة وحده أم لجنة من ثلاثة؟</li>
       <li>ما الحوافز التي تستطيع الجامعة تقديمها فعلًا للمستوى الذهبي؟</li>
-      <li>هل تُعلن المستويات لكل الطلبة أم للجماعات والإدارة فقط؟</li>
+      <li>هل مقادير الخصم (1 و3 و6) مناسبة؟ ومن يعتمد الملاحظة في كل فرع؟</li>
+      <li>هل تُعلن النتائج للجماعات فقط أم لكل الطلبة أيضًا؟</li>
       <li>هل المجالات الخمسة تغطي كل الجماعات، أم ينقصها مجال؟</li>
       <li>كم ساعة عمل يحتاجها التقييم من الموظف في كل فرع، وهل هذا ممكن؟</li>
       <li>من يملك النظام ويشغّله داخل الجامعة بعد اعتماده؟</li>
@@ -261,11 +311,16 @@ textarea{font:inherit;width:100%;box-sizing:border-box;min-height:120px;padding:
       if(r()<0.14){row.cells.push(null);continue}
       var base=Math.min(0.97,Math.max(0.25,branchF[b]+(r()-0.5)*0.45));
       var parts=CRIT.map(function(k){var f=Math.min(1,Math.max(0.1,base+(r()-0.5)*0.35));return Math.round(k[1]*f)});
-      row.cells.push({parts:parts,total:parts.reduce(function(a,x){return a+x},0)});
+      var raw=parts.reduce(function(a,x){return a+x},0);
+      var nt=[],q=r(),n=q<0.5?0:q<0.8?1:q<0.94?2:3;
+      for(var k=0;k<n;k++){var s=r();nt.push(s<0.6?1:s<0.9?3:6)}
+      var ded=Math.min(15,nt.reduce(function(a,x){return a+x},0));
+      var last=Math.round(Math.min(97,Math.max(30,raw+(r()-0.55)*26)));
+      row.cells.push({parts:parts,raw:raw,notes:nt,ded:ded,cap:nt.indexOf(6)>-1,total:Math.max(0,raw-ded),last:last});
     }
     clubs.push(row);
   })});
-  function level(t){return t>=85?['ذهبي','lv-g']:t>=70?['فضي','lv-s']:t>=55?['برونزي','lv-b']:['قيد التطوير','lv-d']}
+  function level(t,cap){if(cap&&t>=85)return ['فضي','lv-s'];return t>=85?['ذهبي','lv-g']:t>=70?['فضي','lv-s']:t>=55?['برونزي','lv-b']:['قيد التطوير','lv-d']}
   function bname(i){return 'الفرع '+(i+1)}
   var sel=document.getElementById('cat'),map=document.getElementById('map'),detail=document.getElementById('detail');
   sel.innerHTML='<option value="all">كل المجالات</option>'+CATS.map(function(c){return '<option value="'+c.id+'">'+c.name+'</option>'}).join('');
@@ -280,7 +335,7 @@ textarea{font:inherit;width:100%;box-sizing:border-box;min-height:120px;padding:
       row.cells.forEach(function(c,b){
         var on=picked&&picked[0]===ci&&picked[1]===b;
         if(!c)h+='<td><button class="lv-x" data-c="'+ci+'" data-b="'+b+'" aria-pressed="'+!!on+'" aria-label="'+row.name+'، '+bname(b)+'، غير موجودة">–</button></td>';
-        else{var l=level(c.total);h+='<td><button class="'+l[1]+'" data-c="'+ci+'" data-b="'+b+'" aria-pressed="'+!!on+'" aria-label="'+row.name+'، '+bname(b)+'، '+c.total+'، '+l[0]+'">'+c.total+'</button></td>'}
+        else{var l=level(c.total,c.cap);h+='<td><button class="'+l[1]+'" data-c="'+ci+'" data-b="'+b+'" aria-pressed="'+!!on+'" aria-label="'+row.name+'، '+bname(b)+'، '+c.total+'، '+l[0]+'">'+c.total+'</button></td>'}
       });
       h+='</tr>';
     });
@@ -296,12 +351,13 @@ textarea{font:inherit;width:100%;box-sizing:border-box;min-height:120px;padding:
       h+='<p style="margin-top:10px"><span class="chip lv-x">غير موجودة في هذا الفرع</span></p>'+
          '<div class="advice"><b>فرصة تأسيس.</b> هذه الجماعة موجودة في '+peers.length+' من '+NB+' فرعًا. أعلاها درجة في '+bname(best.b)+' ('+best.t+')، ويمكن أن ترعى تأسيس جماعة نظيرة هنا وتشاركها خطتها وقوالبها.</div>';
     }else{
-      var l=level(c.total),rank=peers.findIndex(function(p){return p.b===b})+1;
+      var l=level(c.total,c.cap),rank=peers.findIndex(function(p){return p.b===b})+1;
       h+='<div class="total">'+c.total+' <span class="chip '+l[1]+'" style="font-size:.9rem;vertical-align:middle">'+l[0]+'</span></div>'+
          '<p class="small">الترتيب بين الجماعات النظيرة: '+rank+' من '+peers.length+'</p>';
       var worst=0,wr=2;
       CRIT.forEach(function(k,i){var ratio=c.parts[i]/k[1];if(ratio<wr){wr=ratio;worst=i}
         h+='<div class="bar"><span>'+k[0]+'</span><span class="v">'+c.parts[i]+' / '+k[1]+'</span><div class="track"><div class="fill" style="width:'+Math.round(ratio*100)+'%"></div></div></div>'});
+      h+='<p class="small" style="margin:10px 0 0">مجموع المعايير '+c.raw+(c.ded?' · خصم الملاحظات −'+c.ded+' ('+c.notes.length+' ملاحظات)':' · بلا ملاحظات')+(c.cap?' · ملاحظة جسيمة: الحد الأعلى فضي':'')+' · العام الماضي '+c.last+'</p>';
       h+='<div class="advice"><b>أضعف بند:</b> '+CRIT[worst][0]+'. ';
       if(c.total<70&&best.b!==b)h+='<b>توأمة مقترحة</b> مع جماعة '+row.name+' في '+bname(best.b)+' ('+best.t+').';
       else if(c.total>=85)h+='مرشّحة لإرشاد جماعة نظيرة في فرع آخر.';
@@ -314,6 +370,31 @@ textarea{font:inherit;width:100%;box-sizing:border-box;min-height:120px;padding:
   sel.addEventListener('change',function(){draw()});
   var first=0;for(var i=0;i<NB;i++){if(clubs[0].cells[i]){first=i;break}}
   show(0,first);
+
+  var csel=document.getElementById('club'),rt=document.getElementById('results-table');
+  csel.innerHTML=clubs.map(function(row,i){return '<option value="'+i+'">'+row.name+'</option>'}).join('');
+  var th=clubs.map(function(x){return x.name}).indexOf('المسرح');csel.value=String(th<0?0:th);
+  function results(){
+    var row=clubs[+csel.value];
+    var list=row.cells.map(function(c,b){return c?{b:b,c:c}:null}).filter(Boolean);
+    var now=list.slice().sort(function(a,z){return z.c.total-a.c.total});
+    var prev=list.slice().sort(function(a,z){return z.c.last-a.c.last});
+    var pr={};prev.forEach(function(x,i){pr[x.b]=i+1});
+    var up=list.slice().sort(function(a,z){return (z.c.total-z.c.last)-(a.c.total-a.c.last)})[0];
+    document.getElementById('hl-now').textContent=bname(now[0].b)+' · '+now[0].c.total;
+    document.getElementById('hl-last').textContent=bname(prev[0].b)+' · '+prev[0].c.last;
+    var d=up.c.total-up.c.last;
+    document.getElementById('hl-up').textContent=bname(up.b)+' · '+(d>0?'+':'')+d+' درجة';
+    var h='<thead><tr><th class="n">الترتيب</th><th>الفرع</th><th class="n">مجموع المعايير</th><th class="n">الملاحظات</th><th class="n">الخصم</th><th class="n">الدرجة النهائية</th><th>المستوى</th><th class="n">العام الماضي</th><th class="n">تغيّر المركز</th></tr></thead><tbody>';
+    now.forEach(function(x,i){
+      var c=x.c,l=level(c.total,c.cap),mv=pr[x.b]-(i+1);
+      var mvs=mv>0?'<span class="up">▲ '+mv+'</span>':mv<0?'<span class="down">▼ '+(-mv)+'</span>':'=';
+      h+='<tr'+(i===0?' class="top"':'')+'><td class="n">'+(i+1)+'</td><td>'+bname(x.b)+'</td><td class="n">'+c.raw+'</td><td class="n">'+c.notes.length+'</td><td class="n">'+(c.ded?'−'+c.ded:'0')+'</td><td class="n"><b>'+c.total+'</b></td><td><span class="chip '+l[1]+'">'+l[0]+'</span></td><td class="n">'+c.last+'</td><td class="n">'+mvs+'</td></tr>';
+    });
+    rt.innerHTML=h+'</tbody>';
+  }
+  csel.addEventListener('change',results);
+  results();
 
   var notes=document.getElementById('notes'),msg=document.getElementById('copied');
   try{notes.value=localStorage.getItem('mizan-notes')||''}catch(e){}
