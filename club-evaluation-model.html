@@ -1,0 +1,326 @@
+<title>ميزان الجماعات الطلابية</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600&family=Readex+Pro:wght@500;600;700&display=swap">
+<style>
+/* Layout: one reading column of proposal sections, with a wide working band for the branch-by-club map. */
+:root{
+  --bg:#f3f6f6; --surface:#ffffff; --fg:#14282b; --muted:#56696c; --line:#d5dedf;
+  --accent:#0b6b6f; --accent-soft:#dcecec; --on-accent:#ffffff;
+  --gold:#f2d27a; --silver:#cfd8dc; --bronze:#e3b48f; --dev:#f1c3bd; --none:#e9eeee;
+  --display:"Readex Pro","IBM Plex Sans Arabic",Tahoma,sans-serif;
+  --body:"IBM Plex Sans Arabic",Tahoma,"Segoe UI",sans-serif;
+}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
+  --bg:#0f1a1c; --surface:#17262a; --fg:#e6eeee; --muted:#9fb1b3; --line:#2c3f43;
+  --accent:#5cc3c0; --accent-soft:#1d3a3c; --on-accent:#0b1b1c;
+  --gold:#7a6220; --silver:#4a575c; --bronze:#7a4f2e; --dev:#6e3a35; --none:#1e2e31; color-scheme:dark } }
+:root[data-theme="dark"]{
+  --bg:#0f1a1c; --surface:#17262a; --fg:#e6eeee; --muted:#9fb1b3; --line:#2c3f43;
+  --accent:#5cc3c0; --accent-soft:#1d3a3c; --on-accent:#0b1b1c;
+  --gold:#7a6220; --silver:#4a575c; --bronze:#7a4f2e; --dev:#6e3a35; --none:#1e2e31; color-scheme:dark }
+
+body{background:var(--bg);color:var(--fg);font-family:var(--body);font-size:16px;line-height:1.8}
+.page{padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:28px 64px}
+.col{max-width:780px;margin-inline:auto}
+.wide{max-width:1080px;margin-inline:auto}
+h1,h2,h3{font-family:var(--display);line-height:1.4;text-wrap:balance;margin:0}
+h1{font-size:2rem;font-weight:700}
+h2{font-size:1.35rem;font-weight:600;margin-bottom:10px}
+h3{font-size:1.02rem;font-weight:600}
+p{margin:0 0 12px}
+.lead{font-size:1.08rem;color:var(--muted);margin-top:8px}
+section{margin-top:44px}
+.note{background:var(--accent-soft);border-radius:8px;padding:10px 14px;font-size:.92rem;margin-top:16px}
+nav.toc{display:flex;flex-wrap:wrap;gap:6px 16px;margin-top:18px;font-size:.92rem}
+a{color:var(--accent)}
+a:focus-visible,button:focus-visible,textarea:focus-visible,select:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+ul{margin:0 0 12px;padding-inline-start:20px}
+li{margin-bottom:4px}
+.steps{list-style:none;padding:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px;counter-reset:s}
+.steps li{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:14px;margin:0;counter-increment:s}
+.steps li::before{content:counter(s);font-family:var(--display);font-weight:700;color:var(--accent);font-size:1.3rem;display:block}
+.steps b{display:block;font-family:var(--display);font-weight:600}
+.steps span{font-size:.9rem;color:var(--muted)}
+.tw{overflow-x:auto;margin-bottom:12px}
+table{border-collapse:collapse;width:100%;font-size:.92rem;background:var(--surface)}
+th,td{border:1px solid var(--line);padding:8px 10px;text-align:start;vertical-align:top}
+th{font-family:var(--display);font-weight:600;background:var(--accent-soft)}
+td.n,th.n{text-align:center;font-variant-numeric:tabular-nums;white-space:nowrap}
+.small{font-size:.88rem;color:var(--muted)}
+.chip{display:inline-block;border-radius:999px;padding:1px 12px;font-size:.85rem;font-weight:600;color:var(--fg)}
+.lv-g{background:var(--gold)}.lv-s{background:var(--silver)}.lv-b{background:var(--bronze)}.lv-d{background:var(--dev)}.lv-x{background:var(--none)}
+/* map */
+.controls{display:flex;flex-wrap:wrap;gap:10px 18px;align-items:center;margin:12px 0}
+select{font:inherit;padding:4px 8px;border-radius:6px;border:1px solid var(--line);background:var(--surface);color:var(--fg)}
+.legend{display:flex;flex-wrap:wrap;gap:6px;font-size:.85rem}
+.work{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(0,1fr);gap:18px;align-items:start}
+@media (max-width:820px){.work{grid-template-columns:minmax(0,1fr)}}
+.work>*{min-width:0}
+#map th,#map td{padding:0;text-align:center}
+#map th{padding:6px 8px;font-size:.82rem;white-space:nowrap}
+#map th.club{text-align:start;min-width:120px}
+#map button{all:unset;box-sizing:border-box;display:block;width:100%;min-width:40px;padding:8px 4px;cursor:pointer;font-variant-numeric:tabular-nums;font-weight:600;font-size:.9rem;text-align:center;color:var(--fg)}
+#map button:hover{filter:brightness(.94)}
+#map button[aria-pressed="true"]{box-shadow:inset 0 0 0 3px var(--accent)}
+#map button.lv-x{color:var(--muted);font-weight:400}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:16px}
+.panel h3{margin-bottom:2px}
+.total{font-family:var(--display);font-size:2rem;font-weight:700;font-variant-numeric:tabular-nums}
+.bar{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:2px 8px;font-size:.86rem;margin-top:8px}
+.bar .track{grid-column:1/-1;height:7px;border-radius:4px;background:var(--none);overflow:hidden}
+.bar .fill{height:100%;background:var(--accent);border-radius:4px}
+.bar .v{font-variant-numeric:tabular-nums;color:var(--muted)}
+.advice{margin-top:14px;padding-top:12px;border-top:1px solid var(--line);font-size:.92rem}
+textarea{font:inherit;width:100%;box-sizing:border-box;min-height:120px;padding:10px;border-radius:8px;border:1px solid var(--line);background:var(--surface);color:var(--fg)}
+.btn{font:inherit;font-weight:600;background:var(--accent);color:var(--on-accent);border:0;border-radius:8px;padding:6px 16px;cursor:pointer;margin-top:8px}
+.q li{margin-bottom:8px}
+</style>
+
+<div class="page" dir="rtl" lang="ar">
+<div class="col">
+  <p class="small" style="margin:0">نموذج أولي للنقاش · نسخة 0.1</p>
+  <h1>ميزان الجماعات الطلابية</h1>
+  <p class="lead">نظام موحّد تقيّم به شؤون الطلبة جماعات كل الفروع بمعايير واحدة، حتى تتقارب مستوياتها وتحصد جوائز أكثر خارج الجامعة.</p>
+  <div class="note">كل الأرقام والفروع في هذه الصفحة <b>بيانات تجريبية للتوضيح</b> وليست تقييمًا حقيقيًا لأي جماعة. الأوزان والحدود مقترحات أولية تُعدَّل بعد ملاحظاتكم.</div>
+  <nav class="toc" aria-label="أقسام الصفحة">
+    <a href="#idea">الفكرة</a><a href="#flow">آلية العمل</a><a href="#criteria">المعايير</a><a href="#levels">المستويات والحوافز</a><a href="#demo">اللوحة التجريبية</a><a href="#year">الدورة السنوية</a><a href="#discuss">أسئلة للنقاش</a>
+  </nav>
+
+  <section id="idea">
+    <h2>الفكرة</h2>
+    <p>الجامعة لها 11 فرعًا، وفي كل فرع الجماعات نفسها تقريبًا. بعضها يبدع وينافس خارج الجامعة، ونظيرتها في فرع آخر تكتفي بفعاليات عادية. ثلاثة أسباب تتكرر:</p>
+    <ul>
+      <li>لا يوجد معيار واحد معلن يعرف منه رئيس الجماعة ما المطلوب وما معنى "ممتاز".</li>
+      <li>الخبرة تخرج مع تخرّج القيادات، والقيادة الجديدة تبدأ من الصفر.</li>
+      <li>الفرع القوي لا ينقل تجربته للجماعة النظيرة في الفروع الأخرى.</li>
+    </ul>
+    <p>الحل المقترح موقع تستخدمه شؤون الطلبة يقدّم أربعة أشياء:</p>
+    <ul>
+      <li><b>معايير موحّدة</b> لكل الجماعات، مع أمثلة تناسب كل مجال (علمي، أدبي، فني، رياضي، بيئي وخدمي).</li>
+      <li><b>تقييم سنوي</b> ينتهي بمستوى معلن لكل جماعة: ذهبي، فضي، برونزي، قيد التطوير.</li>
+      <li><b>مقارنة الجماعة بنظيراتها</b> في الفروع الأخرى، وربط الأضعف بالأقوى لنقل الخبرة.</li>
+      <li><b>حوافز</b> تجعل المستوى الأعلى يستحق السعي: أولوية في الدعم وفي تمثيل الجامعة.</li>
+    </ul>
+  </section>
+
+  <section id="flow">
+    <h2>آلية العمل</h2>
+    <ol class="steps">
+      <li><b>الجماعة توثّق</b><span>ترفع خطتها، فعالياتها، مشاركاتها وجوائزها مع الدليل (صور، شهادات، كشوف حضور).</span></li>
+      <li><b>المشرف يعتمد</b><span>يراجع ما رُفع ويؤكد صحته، ويضيف رأيه في أداء الجماعة.</span></li>
+      <li><b>شؤون الطلبة بالفرع تقيّم</b><span>تضع الدرجات على المعايير المعلنة باستخدام نموذج تقييم ثابت.</span></li>
+      <li><b>الإدارة المركزية تقارن</b><span>ترى كل الفروع في لوحة واحدة، تعتمد المستويات، وتوزّع الحوافز.</span></li>
+    </ol>
+    <p class="small" style="margin-top:10px">الطالب لا يقيّم جماعة أخرى في أي مرحلة. دوره توثيق عمل جماعته، وتعبئة استبيان رضا قصير بعد الفعاليات.</p>
+  </section>
+
+  <section id="criteria">
+    <h2>المعايير</h2>
+    <p>سبعة معايير مجموعها 100. المعايير نفسها لكل الجماعات، والاختلاف في نوع الإنجاز الذي يُحتسب لكل مجال.</p>
+    <div class="tw"><table>
+      <thead><tr><th>المعيار</th><th class="n">الوزن</th><th>كيف يُقاس</th></tr></thead>
+      <tbody>
+        <tr><td><b>الجوائز والإنجازات الخارجية</b></td><td class="n">25</td><td>نقاط لكل جائزة أو مركز حسب مستوى المسابقة (الجدول التالي).</td></tr>
+        <tr><td><b>جودة الفعاليات وإبداعها</b></td><td class="n">20</td><td>نموذج تقييم من أربعة بنود لأفضل ثلاث فعاليات في السنة.</td></tr>
+        <tr><td><b>مشاركة الأعضاء</b></td><td class="n">15</td><td>عدد الأعضاء النشطين، نسبة الحضور، واستبيان رضا الأعضاء.</td></tr>
+        <tr><td><b>النشاط وتنفيذ الخطة</b></td><td class="n">10</td><td>نسبة ما نُفّذ من الخطة السنوية المعتمدة.</td></tr>
+        <tr><td><b>الأثر على الجامعة والمجتمع</b></td><td class="n">10</td><td>شراكات خارجية، خدمة مجتمع، تعاون مع جماعات أو فروع أخرى.</td></tr>
+        <tr><td><b>التوثيق واستمرارية القيادة</b></td><td class="n">10</td><td>تقارير في موعدها، ملف تسليم للقيادة الجديدة، حضور تدريب القيادات.</td></tr>
+        <tr><td><b>التحسّن عن العام السابق</b></td><td class="n">10</td><td>الفرق بين درجة هذا العام والعام الماضي.</td></tr>
+      </tbody>
+    </table></div>
+
+    <h3 style="margin-top:22px">نقاط الجوائز الخارجية</h3>
+    <p class="small">تُجمع النقاط حتى سقف 25. المشاركة دون مركز تُحتسب حتى لا تخاف الجماعة من التجربة.</p>
+    <div class="tw"><table>
+      <thead><tr><th>مستوى المسابقة</th><th class="n">المركز الأول</th><th class="n">الثاني</th><th class="n">الثالث</th><th class="n">مشاركة</th></tr></thead>
+      <tbody>
+        <tr><td>دولي أو خليجي</td><td class="n">10</td><td class="n">8</td><td class="n">6</td><td class="n">3</td></tr>
+        <tr><td>وطني</td><td class="n">7</td><td class="n">5</td><td class="n">4</td><td class="n">2</td></tr>
+        <tr><td>بين فروع الجامعة</td><td class="n">4</td><td class="n">3</td><td class="n">2</td><td class="n">1</td></tr>
+      </tbody>
+    </table></div>
+
+    <h3 style="margin-top:22px">نموذج تقييم جودة الفعالية</h3>
+    <p class="small">هذا البند يفرّق بين فعالية أُقيمت وفعالية مبهرة. كل بند من 5، والمجموع من 20.</p>
+    <div class="tw"><table>
+      <thead><tr><th>البند</th><th>1 من 5</th><th>5 من 5</th></tr></thead>
+      <tbody>
+        <tr><td><b>الأصالة</b></td><td>تكرار لفعالية سابقة كما هي</td><td>فكرة جديدة على الجامعة أو تطوير واضح لفكرة قديمة</td></tr>
+        <tr><td><b>الوصول</b></td><td>حضور محدود من أعضاء الجماعة فقط</td><td>حضور واسع من خارج الجماعة أو من خارج الجامعة</td></tr>
+        <tr><td><b>رضا الحضور</b></td><td>استبيان ضعيف أو غير موجود</td><td>متوسط رضا مرتفع في استبيان موثّق</td></tr>
+        <tr><td><b>التنظيم</b></td><td>تأخير وارتباك ونقص في التجهيز</td><td>تنفيذ في الوقت، أدوار واضحة، وتوثيق كامل</td></tr>
+      </tbody>
+    </table></div>
+
+    <h3 style="margin-top:22px">ما الذي يُحتسب إنجازًا في كل مجال</h3>
+    <div class="tw"><table>
+      <thead><tr><th>المجال</th><th>أمثلة جماعات</th><th>أمثلة إنجازات</th></tr></thead>
+      <tbody>
+        <tr><td><b>علمي وتقني</b></td><td>الهندسة، تقنية المعلومات، ريادة الأعمال</td><td>هاكاثونات، مسابقات ابتكار، مشاريع منفّذة، شركات طلابية</td></tr>
+        <tr><td><b>أدبي وثقافي</b></td><td>المناظرات، اللغة الإنجليزية</td><td>بطولات مناظرات، مسابقات أدبية، إصدارات منشورة</td></tr>
+        <tr><td><b>فنون</b></td><td>المسرح، الفنون التشكيلية</td><td>مهرجانات مسرحية، معارض، أعمال معروضة خارج الجامعة</td></tr>
+        <tr><td><b>رياضي</b></td><td>الجماعة الرياضية</td><td>بطولات بين الفروع والجامعات، أرقام ومراكز</td></tr>
+        <tr><td><b>بيئي وخدمي</b></td><td>البيئة، الجوالة</td><td>حملات، ساعات تطوع موثّقة، معسكرات، شراكات مع جهات</td></tr>
+      </tbody>
+    </table></div>
+    <p><b>كيف يكون التقييم عادلًا بين مجالات مختلفة؟</b> المقارنة الأساسية تكون بين الجماعة ونظيراتها في الفروع الأخرى (مسرح مع مسرح)، ثم داخل المجال. جائزة "جماعة العام" على مستوى الجامعة تُمنح لأفضل جماعة في كل مجال، لا لجماعة واحدة فوق الجميع.</p>
+  </section>
+
+  <section id="levels">
+    <h2>المستويات والحوافز</h2>
+    <div class="tw"><table>
+      <thead><tr><th>المستوى</th><th class="n">الدرجة</th><th>ما يترتب عليه</th></tr></thead>
+      <tbody>
+        <tr><td><span class="chip lv-g">ذهبي</span></td><td class="n">85 فأعلى</td><td>أولوية في الدعم المالي وتمثيل الجامعة خارجيًا، ترشّح لجائزة جماعة العام، وترشد جماعة نظيرة في فرع آخر.</td></tr>
+        <tr><td><span class="chip lv-s">فضي</span></td><td class="n">70–84</td><td>دعم كامل، وأولوية في حجز القاعات والمرافق.</td></tr>
+        <tr><td><span class="chip lv-b">برونزي</span></td><td class="n">55–69</td><td>دعم أساسي، وخطة تطوير تحدد بندين للتحسين.</td></tr>
+        <tr><td><span class="chip lv-d">قيد التطوير</span></td><td class="n">أقل من 55</td><td>توأمة مع جماعة ذهبية نظيرة، ومتابعة فصلية من شؤون الطلبة.</td></tr>
+      </tbody>
+    </table></div>
+    <h3 style="margin-top:18px">الحد الأدنى لتبقى الجماعة مسجّلة</h3>
+    <ul>
+      <li>رئيس ونائب ومشرف مسمَّون في النظام.</li>
+      <li>خطة سنوية معتمدة خلال الشهر الأول.</li>
+      <li>فعاليتان على الأقل في كل فصل.</li>
+      <li>تقرير نهاية السنة وملف تسليم للقيادة التالية.</li>
+    </ul>
+    <p>الجماعة التي لا تحقق الحد الأدنى تحصل على دعم ومتابعة أولًا. الجماعة الجديدة تُقيَّم في مسار "ناشئة" في سنتها الأولى ولا تُقارن بالجماعات القديمة.</p>
+  </section>
+</div>
+
+<div class="wide">
+  <section id="demo">
+    <h2>اللوحة التجريبية</h2>
+    <p>هكذا ترى الإدارة المركزية كل الفروع. اضغط على أي خانة لترى تفاصيل الجماعة. الخانة الفارغة تعني أن الجماعة غير موجودة في ذلك الفرع.</p>
+    <div class="controls">
+      <label for="cat">المجال <select id="cat"></select></label>
+      <div class="legend" aria-label="مفتاح الألوان">
+        <span class="chip lv-g">ذهبي</span><span class="chip lv-s">فضي</span><span class="chip lv-b">برونزي</span><span class="chip lv-d">قيد التطوير</span><span class="chip lv-x">غير موجودة</span>
+      </div>
+    </div>
+    <div class="work">
+      <div class="tw"><table id="map"></table></div>
+      <div class="panel" id="detail" aria-live="polite"></div>
+    </div>
+  </section>
+</div>
+
+<div class="col">
+  <section id="year">
+    <h2>الدورة السنوية</h2>
+    <div class="tw"><table>
+      <thead><tr><th>الوقت</th><th>ما يحدث</th></tr></thead>
+      <tbody>
+        <tr><td>بداية السنة</td><td>تسجيل الجماعات، تدريب القيادات الجديدة، رفع الخطة السنوية.</td></tr>
+        <tr><td>خلال الفصلين</td><td>الجماعة توثّق كل فعالية ومشاركة خلال أسبوعين من حدوثها، والمشرف يعتمد.</td></tr>
+        <tr><td>نهاية الفصل الأول</td><td>مراجعة مرحلية غير معلنة: كل جماعة ترى درجتها الحالية وما ينقصها.</td></tr>
+        <tr><td>نهاية السنة</td><td>التقييم النهائي، إعلان المستويات، حفل التكريم، وتسليم القيادة.</td></tr>
+      </tbody>
+    </table></div>
+  </section>
+
+  <section id="discuss">
+    <h2>أسئلة للنقاش</h2>
+    <ol class="q">
+      <li>هل يوجد اليوم نموذج تقييم أو لائحة للجماعات في الجامعة؟ نريد البناء عليها لا استبدالها.</li>
+      <li>هل الأوزان مناسبة؟ هل 25 للجوائز الخارجية كثيرة أم قليلة؟</li>
+      <li>من يقيّم جودة الفعاليات: موظف شؤون الطلبة وحده أم لجنة من ثلاثة؟</li>
+      <li>ما الحوافز التي تستطيع الجامعة تقديمها فعلًا للمستوى الذهبي؟</li>
+      <li>هل تُعلن المستويات لكل الطلبة أم للجماعات والإدارة فقط؟</li>
+      <li>هل المجالات الخمسة تغطي كل الجماعات، أم ينقصها مجال؟</li>
+      <li>كم ساعة عمل يحتاجها التقييم من الموظف في كل فرع، وهل هذا ممكن؟</li>
+      <li>من يملك النظام ويشغّله داخل الجامعة بعد اعتماده؟</li>
+      <li>هل نبدأ بتجربة على فرعين أو ثلاثة لسنة واحدة قبل التعميم؟</li>
+    </ol>
+    <label for="notes"><b>ملاحظات اللقاء</b> <span class="small">(تُحفظ على هذا الجهاز فقط)</span></label>
+    <textarea id="notes" placeholder="اكتب ملاحظات من تعرض عليه الفكرة هنا"></textarea>
+    <button class="btn" id="copy" type="button">نسخ الملاحظات</button> <span class="small" id="copied" role="status"></span>
+  </section>
+</div>
+</div>
+
+<script>
+(function(){
+  var CATS=[
+    {id:'sci',name:'علمي وتقني',clubs:['الهندسة','تقنية المعلومات','ريادة الأعمال']},
+    {id:'lit',name:'أدبي وثقافي',clubs:['المناظرات','اللغة الإنجليزية']},
+    {id:'art',name:'فنون',clubs:['المسرح','الفنون التشكيلية']},
+    {id:'spo',name:'رياضي',clubs:['الجماعة الرياضية']},
+    {id:'env',name:'بيئي وخدمي',clubs:['البيئة','الجوالة']}
+  ];
+  var CRIT=[['الجوائز والإنجازات الخارجية',25],['جودة الفعاليات وإبداعها',20],['مشاركة الأعضاء',15],['النشاط وتنفيذ الخطة',10],['الأثر على الجامعة والمجتمع',10],['التوثيق واستمرارية القيادة',10],['التحسّن عن العام السابق',10]];
+  var NB=11;
+  function rng(seed){return function(){seed|=0;seed=seed+0x6D2B79F5|0;var t=Math.imul(seed^seed>>>15,1|seed);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
+  var r=rng(20261110);
+  var branchF=[];for(var b=0;b<NB;b++)branchF.push(0.45+r()*0.4);
+  var clubs=[];
+  CATS.forEach(function(c){c.clubs.forEach(function(n){
+    var row={name:n,cat:c.id,catName:c.name,cells:[]};
+    for(var b=0;b<NB;b++){
+      if(r()<0.14){row.cells.push(null);continue}
+      var base=Math.min(0.97,Math.max(0.25,branchF[b]+(r()-0.5)*0.45));
+      var parts=CRIT.map(function(k){var f=Math.min(1,Math.max(0.1,base+(r()-0.5)*0.35));return Math.round(k[1]*f)});
+      row.cells.push({parts:parts,total:parts.reduce(function(a,x){return a+x},0)});
+    }
+    clubs.push(row);
+  })});
+  function level(t){return t>=85?['ذهبي','lv-g']:t>=70?['فضي','lv-s']:t>=55?['برونزي','lv-b']:['قيد التطوير','lv-d']}
+  function bname(i){return 'الفرع '+(i+1)}
+  var sel=document.getElementById('cat'),map=document.getElementById('map'),detail=document.getElementById('detail');
+  sel.innerHTML='<option value="all">كل المجالات</option>'+CATS.map(function(c){return '<option value="'+c.id+'">'+c.name+'</option>'}).join('');
+  var picked=null;
+  function draw(){
+    var h='<thead><tr><th class="club">الجماعة</th>';
+    for(var b=0;b<NB;b++)h+='<th scope="col">'+bname(b)+'</th>';
+    h+='</tr></thead><tbody>';
+    clubs.forEach(function(row,ci){
+      if(sel.value!=='all'&&row.cat!==sel.value)return;
+      h+='<tr><th class="club" scope="row">'+row.name+'</th>';
+      row.cells.forEach(function(c,b){
+        var on=picked&&picked[0]===ci&&picked[1]===b;
+        if(!c)h+='<td><button class="lv-x" data-c="'+ci+'" data-b="'+b+'" aria-pressed="'+!!on+'" aria-label="'+row.name+'، '+bname(b)+'، غير موجودة">–</button></td>';
+        else{var l=level(c.total);h+='<td><button class="'+l[1]+'" data-c="'+ci+'" data-b="'+b+'" aria-pressed="'+!!on+'" aria-label="'+row.name+'، '+bname(b)+'، '+c.total+'، '+l[0]+'">'+c.total+'</button></td>'}
+      });
+      h+='</tr>';
+    });
+    map.innerHTML=h+'</tbody>';
+  }
+  function show(ci,b){
+    picked=[ci,b];
+    var row=clubs[ci],c=row.cells[b];
+    var peers=row.cells.map(function(x,i){return x?{b:i,t:x.total}:null}).filter(Boolean).sort(function(a,z){return z.t-a.t});
+    var best=peers[0];
+    var h='<p class="small" style="margin:0">'+row.catName+' · '+bname(b)+'</p><h3>جماعة '+row.name+'</h3>';
+    if(!c){
+      h+='<p style="margin-top:10px"><span class="chip lv-x">غير موجودة في هذا الفرع</span></p>'+
+         '<div class="advice"><b>فرصة تأسيس.</b> هذه الجماعة موجودة في '+peers.length+' من '+NB+' فرعًا. أعلاها درجة في '+bname(best.b)+' ('+best.t+')، ويمكن أن ترعى تأسيس جماعة نظيرة هنا وتشاركها خطتها وقوالبها.</div>';
+    }else{
+      var l=level(c.total),rank=peers.findIndex(function(p){return p.b===b})+1;
+      h+='<div class="total">'+c.total+' <span class="chip '+l[1]+'" style="font-size:.9rem;vertical-align:middle">'+l[0]+'</span></div>'+
+         '<p class="small">الترتيب بين الجماعات النظيرة: '+rank+' من '+peers.length+'</p>';
+      var worst=0,wr=2;
+      CRIT.forEach(function(k,i){var ratio=c.parts[i]/k[1];if(ratio<wr){wr=ratio;worst=i}
+        h+='<div class="bar"><span>'+k[0]+'</span><span class="v">'+c.parts[i]+' / '+k[1]+'</span><div class="track"><div class="fill" style="width:'+Math.round(ratio*100)+'%"></div></div></div>'});
+      h+='<div class="advice"><b>أضعف بند:</b> '+CRIT[worst][0]+'. ';
+      if(c.total<70&&best.b!==b)h+='<b>توأمة مقترحة</b> مع جماعة '+row.name+' في '+bname(best.b)+' ('+best.t+').';
+      else if(c.total>=85)h+='مرشّحة لإرشاد جماعة نظيرة في فرع آخر.';
+      else h+='خطة التطوير للسنة القادمة تبدأ من هذا البند.';
+      h+='</div>';
+    }
+    detail.innerHTML=h;draw();
+  }
+  map.addEventListener('click',function(e){var t=e.target.closest('button');if(t)show(+t.dataset.c,+t.dataset.b)});
+  sel.addEventListener('change',function(){draw()});
+  var first=0;for(var i=0;i<NB;i++){if(clubs[0].cells[i]){first=i;break}}
+  show(0,first);
+
+  var notes=document.getElementById('notes'),msg=document.getElementById('copied');
+  try{notes.value=localStorage.getItem('mizan-notes')||''}catch(e){}
+  notes.addEventListener('input',function(){try{localStorage.setItem('mizan-notes',notes.value)}catch(e){}});
+  document.getElementById('copy').addEventListener('click',function(){
+    function fallback(){notes.focus();notes.select();msg.textContent='حُدِّد النص. انسخه يدويًا.'}
+    if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(notes.value).then(function(){msg.textContent='نُسخت الملاحظات'},fallback);else fallback();
+  });
+})();
+</script>
