@@ -1,0 +1,511 @@
+<title>ميزان الجماعات</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600&family=Readex+Pro:wght@500;600;700&display=swap">
+<style>
+/* Layout: brand header with tabs, one working column per view; tables scroll inside their own frame on phones. */
+/* ===== ثيم الجامعة: غيّر قيم هذا القسم فقط لتطبيق ألوان الجامعة وخطوطها ===== */
+:root{
+  --brand:#0b5d63;        /* اللون الأساسي للجامعة */
+  --brand-ink:#ffffff;    /* لون النص فوق اللون الأساسي */
+  --brand-2:#c9a227;      /* اللون الثانوي (لمسات) */
+  --bg:#f2f5f5; --surface:#ffffff; --fg:#14282b; --muted:#56696c; --line:#d5dedf; --soft:#e2eeee;
+  --gold:#f2d27a; --silver:#cfd8dc; --bronze:#e3b48f; --dev:#f1c3bd; --none:#e9eeee;
+  --good:#1f7a43; --bad:#b0412f; --warn:#8a6100;
+  --display:"Readex Pro","IBM Plex Sans Arabic",Tahoma,sans-serif;
+  --body:"IBM Plex Sans Arabic",Tahoma,"Segoe UI",sans-serif;
+}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
+  --brand:#2f8f95; --brand-ink:#ffffff; --brand-2:#d8b850;
+  --bg:#0f1a1c; --surface:#17262a; --fg:#e6eeee; --muted:#9fb1b3; --line:#2c3f43; --soft:#1d3a3c;
+  --gold:#7a6220; --silver:#4a575c; --bronze:#7a4f2e; --dev:#6e3a35; --none:#1e2e31;
+  --good:#6fd39a; --bad:#f08a7a; --warn:#e6c15c; color-scheme:dark } }
+:root[data-theme="dark"]{
+  --brand:#2f8f95; --brand-ink:#ffffff; --brand-2:#d8b850;
+  --bg:#0f1a1c; --surface:#17262a; --fg:#e6eeee; --muted:#9fb1b3; --line:#2c3f43; --soft:#1d3a3c;
+  --gold:#7a6220; --silver:#4a575c; --bronze:#7a4f2e; --dev:#6e3a35; --none:#1e2e31;
+  --good:#6fd39a; --bad:#f08a7a; --warn:#e6c15c; color-scheme:dark }
+/* ===== نهاية الثيم ===== */
+
+[hidden]{display:none!important}
+body{background:var(--bg);color:var(--fg);font-family:var(--body);font-size:15px;line-height:1.7}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--brand)}
+.gut{padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.wrap{max-width:1100px;margin-inline:auto}
+header.top{background:var(--brand);color:var(--brand-ink);position:sticky;top:env(safe-area-inset-top,0px);z-index:5}
+.bar1{display:flex;flex-wrap:wrap;align-items:center;gap:8px 16px;padding-block:12px 6px}
+.brand{font-family:var(--display);font-weight:700;font-size:1.25rem;margin:0}
+.brand small{display:block;font-family:var(--body);font-weight:400;font-size:.8rem;opacity:.85}
+.grow{flex:1}
+.yr{display:flex;align-items:center;gap:6px;font-size:.88rem}
+.yr select{background:transparent;color:var(--brand-ink);border:1px solid color-mix(in srgb,var(--brand-ink) 45%,transparent);border-radius:6px;padding:3px 8px;font:inherit}
+.yr select option{color:var(--fg);background:var(--surface)}
+.save{font-size:.82rem;padding:2px 10px;border-radius:999px;background:color-mix(in srgb,var(--brand-ink) 16%,transparent)}
+nav.tabs{display:flex;gap:2px;overflow-x:auto;padding-block:0}
+nav.tabs a{color:var(--brand-ink);text-decoration:none;padding:8px 14px;border-radius:8px 8px 0 0;white-space:nowrap;opacity:.85;font-weight:500}
+nav.tabs a[aria-current="page"]{background:var(--bg);color:var(--fg);opacity:1}
+main{padding-block:20px 60px}
+h1,h2,h3{font-family:var(--display);line-height:1.4;text-wrap:balance;margin:0}
+h2{font-size:1.25rem;font-weight:600}
+h3{font-size:1rem;font-weight:600}
+p{margin:0 0 10px}
+.muted{color:var(--muted)} .small{font-size:.86rem}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:16px}
+.stack{display:flex;flex-direction:column;gap:16px}
+.row{display:flex;flex-wrap:wrap;gap:10px 14px;align-items:center}
+.row>*{min-width:0}
+label.f{display:flex;flex-direction:column;gap:3px;font-size:.86rem;color:var(--muted)}
+select,input[type=text],input[type=number]{font:inherit;color:var(--fg);background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:6px 10px;min-width:0}
+input[type=number]{width:90px}
+.btn{font:inherit;font-weight:600;border-radius:8px;padding:6px 14px;cursor:pointer;border:1px solid var(--brand);background:var(--brand);color:var(--brand-ink)}
+.btn.ghost{background:transparent;color:var(--brand)}
+.btn.danger{border-color:var(--bad);background:transparent;color:var(--bad)}
+.btn.sm{padding:2px 10px;font-size:.85rem}
+.btn:disabled{opacity:.5;cursor:default}
+a:focus-visible,button:focus-visible,select:focus-visible,input:focus-visible{outline:2px solid var(--brand-2);outline-offset:2px}
+.tw{overflow-x:auto;border:1px solid var(--line);border-radius:10px;background:var(--surface)}
+table{border-collapse:collapse;width:100%;font-size:.9rem}
+th,td{border-bottom:1px solid var(--line);padding:8px 10px;text-align:start;white-space:nowrap}
+th{font-family:var(--display);font-weight:600;font-size:.82rem;color:var(--muted);background:var(--soft)}
+tr:last-child td{border-bottom:0}
+td.n,th.n{text-align:center;font-variant-numeric:tabular-nums}
+tr.first td{font-weight:600}
+.chip{display:inline-block;border-radius:999px;padding:0 10px;font-size:.8rem;font-weight:600;color:var(--fg);white-space:nowrap}
+.lv-g{background:var(--gold)}.lv-s{background:var(--silver)}.lv-b{background:var(--bronze)}.lv-d{background:var(--dev)}.lv-x{background:var(--none);color:var(--muted)}
+.up{color:var(--good);font-weight:600}.down{color:var(--bad);font-weight:600}
+.hl{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px}
+.hl .k{font-size:.82rem;color:var(--muted)}
+.hl .v{font-family:var(--display);font-weight:600;font-size:1.1rem}
+.champs{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:10px}
+.champs button{all:unset;box-sizing:border-box;cursor:pointer;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:10px 12px;display:flex;flex-direction:column;gap:2px}
+.champs button:hover{border-color:var(--brand)}
+.champs button:focus-visible{outline:2px solid var(--brand-2)}
+.champs b{font-family:var(--display);font-weight:600}
+.notice{border-radius:10px;padding:10px 14px;background:var(--soft);font-size:.9rem}
+.notice.warn{border:1px solid var(--warn)}
+/* evaluation */
+.ev{display:grid;grid-template-columns:minmax(0,1fr) 280px;gap:16px;align-items:start}
+@media (max-width:860px){.ev{grid-template-columns:minmax(0,1fr)}}
+.sum{position:sticky;top:130px}
+@media (max-width:860px){.sum{position:static}}
+.total{font-family:var(--display);font-size:2.2rem;font-weight:700;font-variant-numeric:tabular-nums;line-height:1.2}
+.kv{display:grid;grid-template-columns:1fr auto;gap:2px 10px;font-size:.88rem;font-variant-numeric:tabular-nums}
+.kv span:nth-child(even){text-align:left}
+td.n,.kv span:nth-child(even),.pts,.total,.branches .d{direction:ltr;unicode-bidi:isolate}
+.branches{display:flex;flex-wrap:wrap;gap:6px}
+.branches button{font:inherit;font-size:.85rem;border:1px solid var(--line);background:var(--surface);color:var(--fg);border-radius:999px;padding:2px 12px;cursor:pointer}
+.branches button[aria-pressed="true"]{background:var(--brand);border-color:var(--brand);color:var(--brand-ink)}
+.branches button .d{font-variant-numeric:tabular-nums;opacity:.75}
+.sec-h{display:flex;justify-content:space-between;align-items:baseline;gap:10px;margin-bottom:8px}
+.pts{font-variant-numeric:tabular-nums;font-weight:600;color:var(--brand)}
+.slider{display:grid;grid-template-columns:minmax(0,1fr) 60px;gap:2px 12px;align-items:center;padding-block:6px;border-top:1px solid var(--line)}
+.slider:first-of-type{border-top:0}
+.slider .lab{font-weight:500}
+.slider .hint{grid-column:1/-1;font-size:.82rem;color:var(--muted);margin-top:-4px}
+.slider input[type=range]{grid-column:1/2;width:100%;accent-color:var(--brand)}
+.slider output{font-variant-numeric:tabular-nums;text-align:center;font-weight:600}
+.list{display:flex;flex-direction:column;gap:8px}
+.item{display:flex;flex-wrap:wrap;gap:8px;align-items:center;padding:8px;border:1px solid var(--line);border-radius:8px}
+.item input[type=text]{flex:1 1 180px}
+.sev1{background:var(--soft)}.sev3{background:var(--bronze)}.sev6{background:var(--dev)}
+.st-approved{color:var(--bad)} .st-fixed{color:var(--warn)} .st-pending,.st-cancelled{color:var(--muted)}
+.note-text{flex:1 1 200px}
+.matrix td,.matrix th{padding:4px 6px;text-align:center}
+.matrix th.l,.matrix td.l{text-align:start}
+.empty{text-align:center;padding:32px 16px}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+
+<div dir="rtl" lang="ar">
+<header class="top">
+  <div class="gut"><div class="wrap">
+    <div class="bar1">
+      <p class="brand">ميزان الجماعات<small>الجماعات الطلابية · تقنية عبري</small></p>
+      <span class="grow"></span>
+      <label class="yr" for="year">العام الأكاديمي <select id="year"></select></label>
+      <span class="save" id="save" role="status" hidden></span>
+    </div>
+    <nav class="tabs" aria-label="أقسام النظام">
+      <a href="#results" data-v="results">النتائج</a>
+      <a href="#evaluate" data-v="evaluate" hidden>التقييم</a>
+      <a href="#setup" data-v="setup" hidden>الإعدادات</a>
+      <a href="#guide" data-v="guide">دليل المعايير</a>
+    </nav>
+  </div></div>
+</header>
+
+<main class="gut"><div class="wrap">
+  <div id="msg" class="notice warn" hidden style="margin-bottom:16px"></div>
+  <section id="v-results" class="stack" hidden></section>
+  <section id="v-evaluate" class="stack" hidden></section>
+  <section id="v-setup" class="stack" hidden></section>
+  <section id="v-guide" class="stack" hidden>
+    <div class="card">
+      <h2>كيف تُحسب الدرجة</h2>
+      <p class="muted">الدرجة النهائية = مجموع المعايير (من 100) − خصم الملاحظات.</p>
+      <div class="tw"><table>
+        <thead><tr><th>المعيار</th><th class="n">الحد الأعلى</th><th>كيف يُقاس</th></tr></thead>
+        <tbody id="g-crit"></tbody>
+      </table></div>
+    </div>
+    <div class="card">
+      <h2>نقاط الجوائز الخارجية</h2>
+      <p class="muted small">تُجمع النقاط تلقائيًا حتى 25.</p>
+      <div class="tw"><table>
+        <thead><tr><th>مستوى المسابقة</th><th class="n">الأول</th><th class="n">الثاني</th><th class="n">الثالث</th><th class="n">مشاركة</th></tr></thead>
+        <tbody id="g-aw"></tbody>
+      </table></div>
+    </div>
+    <div class="card">
+      <h2>المستويات</h2>
+      <div class="tw"><table>
+        <thead><tr><th>المستوى</th><th class="n">الدرجة النهائية</th></tr></thead>
+        <tbody>
+          <tr><td><span class="chip lv-g">ذهبي</span></td><td class="n">85 فأعلى</td></tr>
+          <tr><td><span class="chip lv-s">فضي</span></td><td class="n">70 – 84</td></tr>
+          <tr><td><span class="chip lv-b">برونزي</span></td><td class="n">55 – 69</td></tr>
+          <tr><td><span class="chip lv-d">قيد التطوير</span></td><td class="n">أقل من 55</td></tr>
+        </tbody>
+      </table></div>
+    </div>
+    <div class="card">
+      <h2>الملاحظات وخصم الدرجات</h2>
+      <div class="tw"><table>
+        <thead><tr><th>النوع</th><th>أمثلة</th><th class="n">الخصم</th></tr></thead>
+        <tbody>
+          <tr><td>بسيطة</td><td>تأخر تقرير، نقص في التوثيق، غياب عن اجتماع إلزامي</td><td class="n">1−</td></tr>
+          <tr><td>متوسطة</td><td>إلغاء فعالية دون إشعار، صرف غير موثّق، عدم الالتزام بالخطة</td><td class="n">3−</td></tr>
+          <tr><td>جسيمة</td><td>مخالفة للآداب أو اللوائح، إخلال بالسلامة، إساءة لسمعة الجامعة</td><td class="n">6− وحدّ أعلى فضي</td></tr>
+        </tbody>
+      </table></div>
+      <ul class="small" style="margin:10px 0 0;padding-inline-start:20px">
+        <li>الملاحظة تُسجَّل «بانتظار الرد» ولا تُخصم. للجماعة 7 أيام للرد.</li>
+        <li>بعد الاعتماد تُخصم كاملة. إذا عولج السبب يُخصم نصفها فقط. الملغاة لا تُخصم.</li>
+        <li>أقصى خصم في السنة 15 درجة. في النتائج يظهر عدد الملاحظات والخصم فقط، لا تفاصيلها.</li>
+      </ul>
+    </div>
+  </section>
+</div></main>
+</div>
+
+<script>
+(function(){
+"use strict";
+var CRIT=[
+  ['الجوائز والإنجازات الخارجية',25,'تُحسب تلقائيًا من الجوائز المسجّلة'],
+  ['جودة الفعاليات وإبداعها',20,'4 بنود من 5 لأفضل الفعاليات'],
+  ['مشاركة الأعضاء',15,'الأعضاء النشطون، نسبة الحضور، رضا الأعضاء'],
+  ['النشاط وتنفيذ الخطة',10,'نسبة ما نُفّذ من الخطة المعتمدة'],
+  ['الأثر على الجامعة والمجتمع',10,'شراكات، خدمة مجتمع، تعاون مع جماعات أخرى'],
+  ['التوثيق واستمرارية القيادة',10,'تقارير في موعدها، ملف تسليم، تدريب القيادات'],
+  ['التحسّن عن العام السابق',10,'مقارنة بأداء الجماعة في العام الماضي']
+];
+var AW={intl:['دولي أو خليجي',[3,10,8,6]],nat:['وطني',[2,7,5,4]],inter:['بين الجامعات والكليات',[1,4,3,2]]};
+var PLACE=['مشاركة','المركز الأول','المركز الثاني','المركز الثالث'];
+var QI=[['الأصالة','فكرة جديدة أو تطوير واضح'],['الوصول','حضور من خارج الجماعة والجامعة'],['رضا الحضور','نتيجة استبيان موثّق'],['التنظيم','الوقت، الأدوار، التوثيق']];
+var SEV={1:'بسيطة',3:'متوسطة',6:'جسيمة'};
+var NST={pending:'بانتظار الرد',approved:'معتمدة',fixed:'عولجت',cancelled:'ملغاة'};
+
+function $(id){return document.getElementById(id)}
+function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})}
+function fmt(n){return Number.isInteger(n)?String(n):n.toFixed(1)}
+function clone(o){return JSON.parse(JSON.stringify(o))}
+function eid(y,c){return y+'_'+c}
+function blank(){return {awards:[],q:[0,0,0,0],s:[0,0,0,0,0],events:0,notes:[]}}
+function awPts(a){return Math.min(25,(a||[]).reduce(function(t,x){var r=AW[x.lvl]||AW.inter;return t+(r[1][x.place]||0)},0))}
+function calc(e){
+  if(!e)return null;
+  var s=e.s||[],q=(e.q||[]).reduce(function(a,x){return a+(+x||0)},0);
+  var parts=[awPts(e.awards),q].concat([0,1,2,3,4].map(function(i){return +s[i]||0}));
+  var raw=parts.reduce(function(a,x){return a+x},0),ded=0,cap=false,cnt=0;
+  (e.notes||[]).forEach(function(n){
+    if(n.status==='approved'){ded+=n.sev;cnt++;if(n.sev===6)cap=true}
+    else if(n.status==='fixed'){ded+=n.sev/2;cnt++;if(n.sev===6)cap=true}
+  });
+  ded=Math.min(15,ded);
+  var aw=e.awards||[];
+  return {parts:parts,raw:raw,ded:ded,cnt:cnt,cap:cap,total:Math.max(0,Math.round((raw-ded)*10)/10),
+    wins:aw.filter(function(x){return x.place>0}).length,parts_n:aw.filter(function(x){return !x.place}).length,events:+e.events||0};
+}
+function level(t,cap){if(cap&&t>=85)return['فضي','lv-s'];return t>=85?['ذهبي','lv-g']:t>=70?['فضي','lv-s']:t>=55?['برونزي','lv-b']:['قيد التطوير','lv-d']}
+function chip(c){var l=level(c.total,c.cap);return '<span class="chip '+l[1]+'">'+l[0]+'</span>'}
+
+$('g-crit').innerHTML=CRIT.map(function(c){return '<tr><td>'+c[0]+'</td><td class="n">'+c[1]+'</td><td>'+c[2]+'</td></tr>'}).join('');
+$('g-aw').innerHTML=Object.keys(AW).map(function(k){var p=AW[k][1];return '<tr><td>'+AW[k][0]+'</td><td class="n">'+p[1]+'</td><td class="n">'+p[2]+'</td><td class="n">'+p[3]+'</td><td class="n">'+p[0]+'</td></tr>'}).join('');
+
+var booted=false,db=null,user=null,isAdmin=false,cfg=null,evals={},year=null,view='results',gotCfg=false,gotEv=false;
+var field='all',club=null,ev=null;
+
+function msg(t){var m=$('msg');if(t){m.textContent=t;m.hidden=false}else m.hidden=true}
+function saveState(s,t){var el=$('save');el.hidden=false;el.textContent=s==='saving'?'يُحفظ…':s==='ok'?'حُفظ':(t||'تعذّر الحفظ')}
+
+var writers={};
+function writer(path){
+  if(writers[path])return writers[path];
+  var timer=null,busy=false,next=null;
+  function flush(){clearTimeout(timer);if(busy||!next)return;var d=next;next=null;busy=true;saveState('saving');
+    db.doc(path).set(d).then(function(){saveState('ok')},function(e){
+      saveState('err',e&&e.code==='quota_exceeded'?'امتلأت مساحة البيانات':e&&e.code==='invalid_argument'?'ليست لديك صلاحية التعديل':'تعذّر الحفظ، أعد المحاولة');
+    }).then(function(){busy=false;if(next)flush()});}
+  return writers[path]={queue:function(d,delay){next=d;clearTimeout(timer);timer=setTimeout(flush,delay==null?700:delay)},flush:flush};
+}
+
+function years(){return (cfg&&cfg.years||[]).slice().sort()}
+function prevYear(y){var ys=years(),i=ys.indexOf(y);return i>0?ys[i-1]:null}
+function clubs(){return cfg&&cfg.clubs||[]}
+function fields(){return cfg&&cfg.fields||{}}
+function clubById(id){return clubs().find(function(c){return c.id===id})}
+function fieldOptions(cur,withAll){var f=fields();return (withAll?'<option value="all">كل المجالات</option>':'')+Object.keys(f).map(function(k){return '<option value="'+k+'"'+(k===cur?' selected':'')+'>'+esc(f[k])+'</option>'}).join('')}
+
+// ---------- routing ----------
+function route(){
+  var h=(location.hash||'').slice(1);
+  view=['results','evaluate','setup','guide'].indexOf(h)>-1?h:'results';
+  if((view==='evaluate'||view==='setup')&&!isAdmin)view='results';
+  document.querySelectorAll('nav.tabs a').forEach(function(a){if(a.dataset.v===view)a.setAttribute('aria-current','page');else a.removeAttribute('aria-current')});
+  ['results','evaluate','setup','guide'].forEach(function(v){$('v-'+v).hidden=v!==view});
+  if(view!=='evaluate'&&ev){writer('evals/'+ev.id).flush();ev=null}
+  render(true);
+}
+window.addEventListener('hashchange',route);
+
+function render(force){
+  if(!cfg){renderEmpty();return}
+  if(!year||years().indexOf(year)<0)year=cfg.current&&years().indexOf(cfg.current)>-1?cfg.current:years()[years().length-1];
+  $('year').innerHTML=years().map(function(y){return '<option'+(y===year?' selected':'')+'>'+esc(y)+'</option>'}).join('');
+  if(view==='results')renderResults();
+  else if(view==='evaluate'&&(force||!ev))renderEvaluate();
+  else if(view==='setup'&&(force||!$('v-setup').contains(document.activeElement)))renderSetup();
+}
+$('year').addEventListener('change',function(e){if(ev){writer('evals/'+ev.id).flush();ev=null}year=e.target.value;render(true)});
+
+function renderEmpty(){
+  var html='<div class="card empty">';
+  if(!booted)html+='<p class="muted">جارٍ تحميل البيانات…</p>';
+  else if(!db)html+='<h2>لا يمكن الوصول إلى البيانات</h2><p class="muted">افتح النظام من claude.ai وأنت مسجّل الدخول.</p>';
+  else if(!gotCfg)html+='<p class="muted">جارٍ تحميل البيانات…</p>';
+  else if(isAdmin)html+='<h2>النظام غير مُجهَّز بعد</h2><p class="muted">أنشئ قائمة الجماعات الأولية، ويمكنك تعديلها لاحقًا.</p><button class="btn" id="init">إنشاء الإعداد الأولي</button>';
+  else html+='<h2>النظام قيد الإعداد</h2><p class="muted">ستظهر النتائج هنا بعد أن تجهّزه الإدارة.</p>';
+  html+='</div>';
+  ['results','evaluate','setup'].forEach(function(v){$('v-'+v).innerHTML=v===view?html:''});
+  var b=$('init');if(b)b.onclick=function(){b.disabled=true;writer('config/main').queue(defaultCfg(),0)};
+}
+function defaultCfg(){
+  var T=[['engineering','الهندسة','sci'],['it','تقنية المعلومات','sci'],['entre','ريادة الأعمال','sci'],['debate','المناظرات','lit'],['english','اللغة الإنجليزية','lit'],['theatre','المسرح','art'],['arts','الفنون','art'],['sports','الرياضة','spo'],['env','البيئة','env'],['scouts','الجوالة','env']];
+  return {fields:{sci:'علمي وتقني',lit:'أدبي وثقافي',art:'فنون',spo:'رياضي',env:'بيئي وخدمي'},
+    clubs:T.map(function(t){return {id:t[0],name:t[1],field:t[2]}}),years:['2025-2026','2026-2027'],current:'2026-2027'};
+}
+
+// ---------- results ----------
+function standings(y,f){
+  var py=prevYear(y),list=clubs().filter(function(c){return f==='all'||c.field===f});
+  var rows=list.map(function(c){return {k:c,c:calc(evals[eid(y,c.id)]),p:py?calc(evals[eid(py,c.id)]):null,demo:!!(evals[eid(y,c.id)]||{}).demo}});
+  var done=rows.filter(function(r){return r.c}).sort(function(a,z){return z.c.total-a.c.total});
+  var prevDone=rows.filter(function(r){return r.p}).sort(function(a,z){return z.p.total-a.p.total});
+  var pr={};prevDone.forEach(function(r,i){pr[r.k.id]=i+1});
+  return {done:done,todo:rows.filter(function(r){return !r.c}),prevDone:prevDone,pr:pr};
+}
+function renderResults(){
+  var st=standings(year,field),py=prevYear(year),f=fields(),demo=st.done.some(function(r){return r.demo});
+  var both=st.done.filter(function(r){return r.p}).sort(function(a,z){return (z.c.total-z.p.total)-(a.c.total-a.p.total)});
+  var h='<div class="card stack" style="gap:12px">'+
+    '<div class="row"><h2 class="grow">ترتيب الجماعات · '+esc(year)+'</h2>'+
+    '<label class="f" for="r-field">المجال<select id="r-field">'+fieldOptions(field,true)+'</select></label></div>';
+  if(demo)h+='<div class="notice warn">تحتوي هذه النتائج على بيانات تجريبية للعرض.</div>';
+  h+='<div class="hl">'+
+    hlCard('بطل هذا العام',st.done[0]?st.done[0].k.name+' · '+fmt(st.done[0].c.total):'لم يُقيَّم أحد بعد')+
+    hlCard('بطل العام الماضي'+(py?' ('+esc(py)+')':''),st.prevDone[0]?st.prevDone[0].k.name+' · '+fmt(st.prevDone[0].p.total):'لا توجد نتائج')+
+    hlCard('الأكثر تقدّمًا',both[0]?both[0].k.name+' · '+signed(both[0].c.total-both[0].p.total)+' درجة':'يحتاج نتائج عامين')+
+  '</div>';
+  h+='<div class="tw"><table><thead><tr><th class="n">#</th><th>الجماعة</th><th>المجال</th><th class="n">الجوائز</th><th class="n">المشاركات</th><th class="n">الفعاليات</th><th class="n">المعايير</th><th class="n">الملاحظات</th><th class="n">الخصم</th><th class="n">النهائية</th><th>المستوى</th><th class="n">العام الماضي</th><th class="n">التغيّر</th></tr></thead><tbody>';
+  st.done.forEach(function(r,i){
+    var c=r.c,mv=st.pr[r.k.id]?st.pr[r.k.id]-(i+1):null;
+    var m=mv==null?'<span class="muted">جديد</span>':mv>0?'<span class="up">▲ '+mv+'</span>':mv<0?'<span class="down">▼ '+(-mv)+'</span>':'=';
+    h+='<tr'+(i===0?' class="first"':'')+'><td class="n">'+(i+1)+'</td><td>'+esc(r.k.name)+'</td><td class="muted">'+esc(f[r.k.field]||'')+'</td><td class="n">'+c.wins+'</td><td class="n">'+c.parts_n+'</td><td class="n">'+c.events+'</td><td class="n">'+fmt(c.raw)+'</td><td class="n">'+c.cnt+'</td><td class="n">'+(c.ded?'−'+fmt(c.ded):'0')+'</td><td class="n"><b>'+fmt(c.total)+'</b></td><td>'+chip(c)+'</td><td class="n">'+(r.p?fmt(r.p.total):'—')+'</td><td class="n">'+m+'</td></tr>';
+  });
+  st.todo.forEach(function(r){h+='<tr><td class="n">—</td><td>'+esc(r.k.name)+'</td><td class="muted">'+esc(f[r.k.field]||'')+'</td><td colspan="10" class="muted">لم تُقيَّم بعد</td></tr>'});
+  if(!st.done.length&&!st.todo.length)h+='<tr><td colspan="13" class="muted">لا توجد جماعات في هذا المجال.</td></tr>';
+  h+='</tbody></table></div><p class="small muted">الجوائز = مراكز أولى إلى ثالثة. التغيّر = مقارنة المركز بالعام الماضي. تفاصيل الملاحظات لا تُعرض هنا.</p></div>';
+  h+='<div class="card stack" style="gap:10px"><h2>الأفضل في كل مجال · '+esc(year)+'</h2><div class="champs">';
+  Object.keys(f).forEach(function(k){
+    var s=standings(year,k).done[0];
+    h+='<button data-field="'+k+'"><span class="small muted">'+esc(f[k])+'</span>'+
+      (s?'<b>'+esc(s.k.name)+'</b><span>'+fmt(s.c.total)+' '+chip(s.c)+'</span>':'<span class="muted">لا نتائج بعد</span>')+'</button>';
+  });
+  h+='</div></div>';
+  $('v-results').innerHTML=h;
+  $('r-field').onchange=function(e){field=e.target.value;renderResults()};
+  $('v-results').querySelectorAll('.champs button').forEach(function(b){b.onclick=function(){field=b.dataset.field;renderResults();window.scrollTo({top:0})}});
+}
+function hlCard(k,v){return '<div class="card"><div class="k">'+k+'</div><div class="v">'+esc(v)+'</div></div>'}
+function signed(n){return (n>0?'+':'')+fmt(Math.round(n*10)/10)}
+
+// ---------- evaluate ----------
+function renderEvaluate(){
+  var cs=clubs();
+  if(!clubById(club))club=cs[0]&&cs[0].id;
+  var h='<div class="card stack" style="gap:10px"><div class="row"><h2 class="grow">تقييم '+esc(year)+'</h2><span class="small muted">التغييرات تُحفظ تلقائيًا</span></div>'+
+    '<div class="branches" role="group" aria-label="الجماعة">'+cs.map(function(c){
+      var r=calc(evals[eid(year,c.id)]);
+      return '<button data-c="'+esc(c.id)+'" aria-pressed="'+(c.id===club)+'">'+esc(c.name)+' <span class="d">'+(r?fmt(r.total):'—')+'</span></button>';
+    }).join('')+'</div></div>';
+  if(!club){$('v-evaluate').innerHTML=h+'<div class="card muted">لا توجد جماعات بعد. أضفها من الإعدادات.</div>';bindEvalTop();return}
+  var id=eid(year,club),src=evals[id];
+  ev={id:id,data:src?clone(src):blank()};
+  var d=ev.data;['awards','notes'].forEach(function(k){if(!Array.isArray(d[k]))d[k]=[]});
+  if(!Array.isArray(d.q))d.q=[0,0,0,0];if(!Array.isArray(d.s))d.s=[0,0,0,0,0];
+  h+='<div class="ev"><div class="stack">';
+  h+='<div class="card"><div class="sec-h"><h3>'+CRIT[0][0]+'</h3><span class="pts" id="p-aw"></span></div><div class="list" id="awards"></div>'+
+     '<div class="row" style="margin-top:10px"><button class="btn ghost sm" data-act="add-aw">+ إضافة جائزة أو مشاركة</button></div></div>';
+  h+='<div class="card"><div class="sec-h"><h3>'+CRIT[1][0]+'</h3><span class="pts" id="p-q"></span></div>'+
+     QI.map(function(x,i){return slider('q:'+i,x[0],x[1],5,d.q[i])}).join('')+'</div>';
+  h+='<div class="card"><div class="sec-h"><h3>بقية المعايير</h3></div>'+
+     [2,3,4,5,6].map(function(ci,i){return slider('s:'+i,CRIT[ci][0],CRIT[ci][2],CRIT[ci][1],d.s[i])}).join('')+
+     '<div class="row" style="margin-top:10px"><label class="f" for="events">عدد الفعاليات المنفّذة (للإحصاء فقط)<input type="number" id="events" min="0" max="500" value="'+(+d.events||0)+'" data-k="events"></label></div></div>';
+  h+='<div class="card"><div class="sec-h"><h3>الملاحظات</h3><span class="pts" id="p-n"></span></div><div class="list" id="notes"></div>'+
+     '<div class="item" style="margin-top:10px"><input type="text" id="n-text" placeholder="وصف الملاحظة" aria-label="وصف الملاحظة">'+
+     '<button class="btn ghost sm" data-act="add-n" data-sev="1">بسيطة −1</button><button class="btn ghost sm" data-act="add-n" data-sev="3">متوسطة −3</button><button class="btn danger sm" data-act="add-n" data-sev="6">جسيمة −6</button></div>'+
+     '<p class="small muted" style="margin:8px 0 0">الملاحظة الجديدة تبدأ «بانتظار الرد» ولا تُخصم حتى تُعتمد.</p></div>';
+  h+='</div><aside class="card sum" aria-live="polite" id="sum"></aside></div>';
+  var box=$('v-evaluate');box.innerHTML=h;
+  bindEvalTop();renderAwards();renderNotes();updateLive();
+  box.oninput=onEvalInput;box.onchange=onEvalInput;box.onclick=onEvalClick;
+}
+function bindEvalTop(){
+  $('v-evaluate').querySelectorAll('.branches button').forEach(function(b){b.onclick=function(){flushEv();club=b.dataset.c;renderEvaluate()}});
+}
+function flushEv(){if(ev)writer('evals/'+ev.id).flush()}
+function slider(k,lab,hint,max,v){
+  var id='sl-'+k.replace(':','-');
+  return '<div class="slider"><label class="lab" for="'+id+'">'+esc(lab)+'</label><output for="'+id+'" id="o-'+id+'">'+(+v||0)+' / '+max+'</output>'+
+    '<span class="hint">'+esc(hint)+'</span><input type="range" id="'+id+'" min="0" max="'+max+'" step="1" value="'+(+v||0)+'" data-k="'+k+'" data-max="'+max+'"></div>';
+}
+function renderAwards(){
+  var a=ev.data.awards;
+  $('awards').innerHTML=a.length?a.map(function(x,i){
+    return '<div class="item"><input type="text" value="'+esc(x.title||'')+'" placeholder="اسم المسابقة" aria-label="اسم المسابقة" data-k="aw:'+i+':title">'+
+      '<select aria-label="المستوى" data-k="aw:'+i+':lvl">'+Object.keys(AW).map(function(k){return '<option value="'+k+'"'+(x.lvl===k?' selected':'')+'>'+AW[k][0]+'</option>'}).join('')+'</select>'+
+      '<select aria-label="النتيجة" data-k="aw:'+i+':place">'+PLACE.map(function(p,j){return '<option value="'+j+'"'+(+x.place===j?' selected':'')+'>'+p+'</option>'}).join('')+'</select>'+
+      '<span class="pts">'+((AW[x.lvl]||AW.inter)[1][x.place]||0)+'</span>'+
+      '<button class="btn danger sm" data-act="del-aw" data-i="'+i+'">حذف</button></div>';
+  }).join(''):'<p class="muted small" style="margin:0">لا توجد جوائز أو مشاركات مسجّلة.</p>';
+}
+function renderNotes(){
+  var n=ev.data.notes;
+  $('notes').innerHTML=n.length?n.map(function(x,i){
+    var due=x.date?new Date(x.date+7*864e5).toLocaleDateString('ar'):'';
+    return '<div class="item"><span class="chip sev'+x.sev+'">'+SEV[x.sev]+' −'+x.sev+'</span><span class="note-text">'+esc(x.text||'بلا وصف')+
+      (x.status==='pending'&&due?' <span class="small muted">· مهلة الرد حتى '+esc(due)+'</span>':'')+'</span>'+
+      '<select aria-label="حالة الملاحظة" class="st-'+x.status+'" data-k="n:'+i+':status">'+Object.keys(NST).map(function(k){return '<option value="'+k+'"'+(x.status===k?' selected':'')+'>'+NST[k]+'</option>'}).join('')+'</select>'+
+      '<button class="btn danger sm" data-act="del-n" data-i="'+i+'">حذف</button></div>';
+  }).join(''):'<p class="muted small" style="margin:0">لا توجد ملاحظات على هذه الجماعة.</p>';
+}
+function updateLive(){
+  var c=calc(ev.data),py=prevYear(year),p=py?calc(evals[eid(py,club)]):null,k=clubById(club);
+  $('p-aw').textContent=c.parts[0]+' / 25';
+  $('p-q').textContent=c.parts[1]+' / 20';
+  $('p-n').textContent=c.ded?'−'+fmt(c.ded):'';
+  $('sum').innerHTML='<p class="small muted" style="margin:0">'+esc(k?k.name:'')+' · '+esc(year)+'</p>'+
+    '<div class="total">'+fmt(c.total)+'</div><p style="margin:2px 0 10px">'+chip(c)+(c.cap?' <span class="small muted">حد أعلى فضي</span>':'')+'</p>'+
+    '<div class="kv">'+CRIT.map(function(x,i){return '<span>'+x[0]+'</span><span>'+c.parts[i]+'/'+x[1]+'</span>'}).join('')+
+    '<span><b>مجموع المعايير</b></span><span><b>'+fmt(c.raw)+'</b></span><span>خصم الملاحظات</span><span>'+(c.ded?'−'+fmt(c.ded):'0')+'</span>'+
+    '<span>العام الماضي</span><span>'+(p?fmt(p.total):'—')+'</span></div>';
+}
+function save(){
+  var d=clone(ev.data);d.year=year;d.club=club;d.demo=false;d.updatedAt=Date.now();
+  writer('evals/'+ev.id).queue(d);
+  var b=$('v-evaluate').querySelector('.branches button[aria-pressed="true"] .d');if(b)b.textContent=fmt(calc(ev.data).total);
+}
+function onEvalInput(e){
+  var k=e.target.dataset&&e.target.dataset.k;if(!k||!ev)return;
+  var d=ev.data,p=k.split(':'),v=e.target.value;
+  if(p[0]==='q'||p[0]==='s'){d[p[0]][+p[1]]=+v;$('o-'+e.target.id).textContent=v+' / '+e.target.dataset.max}
+  else if(k==='events')d.events=Math.max(0,+v||0);
+  else if(p[0]==='aw'){var a=d.awards[+p[1]];if(!a)return;a[p[2]]=p[2]==='place'?+v:v;if(p[2]!=='title'&&e.type==='change')renderAwards()}
+  else if(p[0]==='n'){var n=d.notes[+p[1]];if(!n)return;n.status=v;e.target.className='st-'+v}
+  else return;
+  if(e.type==='input'&&(p[0]==='aw'&&p[2]!=='title'||p[0]==='n'))return;
+  updateLive();save();
+}
+function onEvalClick(e){
+  var b=e.target.closest('button[data-act]');if(!b||!ev)return;var d=ev.data,act=b.dataset.act;
+  if(act==='add-aw'){d.awards.push({title:'',lvl:'nat',place:1});renderAwards();var ins=$('awards').querySelectorAll('input');if(ins.length)ins[ins.length-1].focus()}
+  else if(act==='del-aw'){d.awards.splice(+b.dataset.i,1);renderAwards()}
+  else if(act==='add-n'){var t=$('n-text');d.notes.push({sev:+b.dataset.sev,text:t.value.trim(),status:'pending',date:Date.now()});t.value='';renderNotes()}
+  else if(act==='del-n'){d.notes.splice(+b.dataset.i,1);renderNotes()}
+  else return;
+  updateLive();save();
+}
+
+// ---------- setup ----------
+function setCfg(mut,rerender){var c=clone(cfg);mut(c);cfg=c;writer('config/main').queue(c);if(rerender)renderSetup()}
+function renderSetup(){
+  var c=cfg,h='';
+  h+='<div class="card stack" style="gap:10px"><h2>الأعوام الأكاديمية</h2><div class="row">'+
+    '<label class="f" for="s-cur">العام الحالي<select id="s-cur">'+years().map(function(y){return '<option'+(y===c.current?' selected':'')+'>'+esc(y)+'</option>'}).join('')+'</select></label>'+
+    '<button class="btn ghost" id="s-addy">+ إضافة العام التالي</button></div><p class="small muted" style="margin:0">العام الحالي هو ما يظهر أولًا عند فتح النظام.</p></div>';
+  h+='<div class="card stack" style="gap:10px"><h2>الجماعات الطلابية</h2><div class="list">'+clubs().map(function(t,i){
+    return '<div class="item"><input type="text" value="'+esc(t.name)+'" aria-label="اسم الجماعة" data-tn="'+i+'">'+
+      '<select aria-label="المجال" data-tf="'+i+'">'+fieldOptions(t.field,false)+'</select>'+
+      '<button class="btn danger sm" data-tdel="'+i+'">حذف</button></div>';}).join('')+'</div>'+
+    '<div class="row"><button class="btn ghost" id="s-addt">+ إضافة جماعة</button></div></div>';
+  var demoN=Object.keys(evals).filter(function(k){return evals[k].demo}).length;
+  h+='<div class="card stack" style="gap:10px"><h2>بيانات تجريبية للعرض</h2><p class="small muted" style="margin:0">تملأ الجماعات غير المقيَّمة بدرجات عشوائية لعرض النظام على المسؤولين. لا تلمس التقييمات الحقيقية، وأي تعديل على تقييم تجريبي يجعله حقيقيًا.</p>'+
+    '<div class="row"><button class="btn ghost" id="s-demo">تعبئة بيانات تجريبية</button><button class="btn danger" id="s-undemo"'+(demoN?'':' disabled')+'>حذف البيانات التجريبية ('+demoN+')</button><span class="small" id="s-prog" role="status"></span></div></div>';
+  var v=$('v-setup');v.innerHTML=h;
+  $('s-cur').onchange=function(e){setCfg(function(c){c.current=e.target.value})};
+  $('s-addy').onclick=function(){var ys=years(),l=ys[ys.length-1]||'2025-2026',a=+l.slice(0,4)+1;setCfg(function(c){c.years.push(a+'-'+(a+1))},true)};
+  $('s-addt').onclick=function(){var id='c'+Date.now().toString(36);setCfg(function(c){c.clubs.push({id:id,name:'جماعة جديدة',field:Object.keys(c.fields)[0]})},true);
+    var ins=v.querySelectorAll('[data-tn]');if(ins.length){ins[ins.length-1].focus();ins[ins.length-1].select()}};
+  v.oninput=function(e){var t=e.target;if(t.dataset.tn!=null)setCfg(function(c){c.clubs[+t.dataset.tn].name=t.value})};
+  v.onchange=function(e){var t=e.target;if(t.dataset.tf!=null)setCfg(function(c){c.clubs[+t.dataset.tf].field=t.value})};
+  v.onclick=function(e){var b=e.target.closest('button[data-tdel]');if(!b)return;
+    if(b.dataset.armed)setCfg(function(c){c.clubs.splice(+b.dataset.tdel,1)},true);
+    else{b.dataset.armed='1';b.textContent='تأكيد الحذف'}};
+  $('s-demo').onclick=fillDemo;$('s-undemo').onclick=clearDemo;
+}
+async function runAll(jobs,label){
+  var prog=$('s-prog');
+  for(var i=0;i<jobs.length;i+=4){
+    await Promise.all(jobs.slice(i,i+4).map(function(j){return j().catch(function(){})}));
+    if(prog)prog.textContent=label+' '+Math.min(jobs.length,i+4)+' من '+jobs.length;
+  }
+  if(prog)prog.textContent='تم.';
+}
+function fillDemo(){
+  var seed=11,r=function(){seed=(seed*16807)%2147483647;return seed/2147483647},jobs=[];
+  var bf={};clubs().forEach(function(c){bf[c.id]=0.35+r()*0.55});
+  years().forEach(function(y,yi){clubs().forEach(function(c){
+    var id=eid(y,c.id);if(evals[id])return;
+    var f=Math.min(0.97,Math.max(0.2,bf[c.id]+(r()-0.5)*0.3+yi*0.03)),pick=function(m){return Math.round(m*Math.min(1,Math.max(0,f+(r()-0.5)*0.3)))};
+    var aw=[],na=Math.round(f*4*r()),k;for(k=0;k<na;k++){aw.push({title:'مسابقة تجريبية '+(k+1),lvl:r()<0.2?'intl':r()<0.6?'nat':'inter',place:r()<0.4?0:1+Math.floor(r()*3)})}
+    var notes=[],nn=r()<0.55?0:r()<0.8?1:2;for(k=0;k<nn;k++){var s=r();notes.push({sev:s<0.6?1:s<0.9?3:6,text:'ملاحظة تجريبية',status:r()<0.75?'approved':'fixed',date:Date.now()})}
+    var d={awards:aw,q:[0,0,0,0].map(function(){return Math.max(1,pick(5))}),s:[15,10,10,10,10].map(pick),events:Math.round(f*20),notes:notes,year:y,club:c.id,demo:true,updatedAt:Date.now()};
+    jobs.push(function(){return db.doc('evals/'+id).set(d)});
+  })});
+  $('s-demo').disabled=true;
+  runAll(jobs,'كُتب').then(function(){var b=$('s-demo');if(b)b.disabled=false});
+}
+function clearDemo(){
+  var jobs=Object.keys(evals).filter(function(k){return evals[k].demo}).map(function(k){return function(){return db.doc('evals/'+k).delete()}});
+  $('s-undemo').disabled=true;runAll(jobs,'حُذف');
+}
+
+// ---------- boot ----------
+route();
+(async function(){
+  var C=window.claude;
+  try{db=C&&C.use?await C.use('db'):null;user=C&&C.use?await C.use('user'):null}catch(e){db=null}
+  booted=true;
+  if(!db){gotCfg=true;render(true);return}
+  try{isAdmin=user?await user.canEdit():false}catch(e){isAdmin=false}
+  document.querySelectorAll('nav.tabs a[data-v="evaluate"],nav.tabs a[data-v="setup"]').forEach(function(a){a.hidden=!isAdmin});
+  var t=setTimeout(function(){msg('تعذّر الوصول إلى البيانات حتى الآن. قد تكون النتائج المعروضة غير محدّثة.')},10000);
+  function ready(m){if(gotCfg&&gotEv&&!m.fromCache){clearTimeout(t);msg('')}}
+  db.doc('config/main').onSnapshot(function(s){gotCfg=true;cfg=s.exists?s.data():null;if(cfg&&!Array.isArray(cfg.clubs))cfg=null;render(!cfg);ready(s.metadata)},
+    function(){clearTimeout(t);msg('انقطع الاتصال بالبيانات. أعد فتح الصفحة.')});
+  db.collection('evals').onSnapshot(function(s){gotEv=true;var m={};s.docs.forEach(function(d){m[d.id]=d.data()});evals=m;render(false);ready(s.metadata)},
+    function(){clearTimeout(t);msg('انقطع الاتصال بالبيانات. أعد فتح الصفحة.')});
+  route();
+})();
+})();
+</script>
