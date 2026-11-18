@@ -1,0 +1,269 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<title>حملة تحديث بيانات الخريجين</title>
+<style>
+@font-face{font-family:Cairo;font-weight:400;src:url(fonts/cairo-arabic-400-normal.woff2)format('woff2');unicode-range:U+0600-06FF,U+0750-077F,U+FB50-FDFF,U+FE70-FEFF,U+200C-200E}
+@font-face{font-family:Cairo;font-weight:700;src:url(fonts/cairo-arabic-700-normal.woff2)format('woff2');unicode-range:U+0600-06FF,U+0750-077F,U+FB50-FDFF,U+FE70-FEFF,U+200C-200E}
+@font-face{font-family:Cairo;font-weight:900;src:url(fonts/cairo-arabic-900-normal.woff2)format('woff2');unicode-range:U+0600-06FF,U+0750-077F,U+FB50-FDFF,U+FE70-FEFF,U+200C-200E}
+@font-face{font-family:Cairo;font-weight:400;src:url(fonts/cairo-latin-400-normal.woff2)format('woff2')}
+@font-face{font-family:Cairo;font-weight:700;src:url(fonts/cairo-latin-700-normal.woff2)format('woff2')}
+@font-face{font-family:Cairo;font-weight:900;src:url(fonts/cairo-latin-900-normal.woff2)format('woff2')}
+:root{--navy:#0b2559;--navy2:#123a80;--blue:#1f6fd1;--cyan:#22c3e6;--orange:#f59e1b;--gold:#ffc83d;--white:#fff;--ink:#0b1b3a}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{width:1920px;height:1080px;overflow:hidden;background:var(--navy)}
+body{font-family:Cairo,sans-serif;color:#fff}
+#stage{position:absolute;inset:0;overflow:hidden;background:radial-gradient(1200px 800px at 75% 20%,#1b4fa3 0%,#0b2559 55%,#071a40 100%)}
+.abs{position:absolute}
+.scene{position:absolute;inset:0;opacity:0}
+.c{left:50%;top:50%;transform:translate(-50%,-50%)}
+/* moving background shapes */
+.blob{position:absolute;border-radius:50%;filter:blur(2px);opacity:.18}
+.grid{position:absolute;inset:-200px;background-image:radial-gradient(rgba(255,255,255,.14) 2px,transparent 2px);background-size:56px 56px}
+/* logo bar */
+#logoBar{position:absolute;top:36px;right:48px;display:flex;align-items:center;gap:18px;z-index:50}
+#logoBox{height:110px;display:flex;align-items:center;background:#fff;border-radius:18px;padding:10px 18px;box-shadow:0 10px 30px rgba(0,0,0,.25)}
+#logoBox img{height:90px;display:block}
+.lt{font-weight:700;line-height:1.25;text-align:right}
+.lt b{display:block;font-size:24px;color:var(--navy)}
+.lt span{display:block;font-size:17px;color:#4b5f86;font-weight:700}
+/* text */
+.h1{font-weight:900;font-size:92px;line-height:1.25;text-align:center;text-shadow:0 8px 30px rgba(0,0,0,.35)}
+.h2{font-weight:900;font-size:64px;line-height:1.35;text-align:center}
+.h3{font-weight:700;font-size:40px;line-height:1.5;text-align:center}
+.hl{color:var(--gold)}
+.pill{display:inline-block;background:var(--orange);color:#fff;border-radius:999px;padding:6px 34px;font-weight:900}
+/* caption / subtitle */
+#sub{white-space:nowrap;position:absolute;bottom:40px;left:50%;transform:translateX(-50%);max-width:1500px;background:rgba(5,16,40,.72);border-radius:16px;padding:10px 34px;font-size:34px;font-weight:700;line-height:1.5;text-align:center;z-index:60;border:1px solid rgba(255,255,255,.12)}
+#progress{position:absolute;left:0;top:0;height:8px;background:linear-gradient(90deg,var(--orange),var(--gold));z-index:70}
+/* cards */
+.card{position:absolute;background:#fff;color:var(--ink);border-radius:28px;box-shadow:0 30px 60px rgba(0,0,0,.35)}
+.icon{position:absolute;width:300px;height:330px;background:rgba(255,255,255,.08);border:2px solid rgba(255,255,255,.18);border-radius:32px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;backdrop-filter:blur(4px)}
+.icon svg{width:150px;height:150px}
+.icon div{font-size:34px;font-weight:900;text-align:center;line-height:1.3}
+.prize{position:absolute}
+.cat{position:absolute;width:640px;padding:26px 34px;border-radius:26px;background:rgba(255,255,255,.1);border:2px solid rgba(255,255,255,.2)}
+.cat .t{font-size:30px;font-weight:700;color:var(--gold)}
+.cat .d{font-size:46px;font-weight:900;line-height:1.3}
+.btn{display:inline-block;background:linear-gradient(180deg,#ffb53a,#f08a00);color:#fff;font-weight:900;font-size:58px;padding:14px 60px;border-radius:999px;box-shadow:0 14px 0 #b86400,0 24px 40px rgba(0,0,0,.35)}
+.conf{position:absolute;width:16px;height:26px;border-radius:4px}
+</style>
+</head>
+<body>
+<div id="stage">
+  <div class="grid" id="grid"></div>
+  <div class="blob" id="b1" style="width:700px;height:700px;background:var(--cyan);left:-200px;top:500px"></div>
+  <div class="blob" id="b2" style="width:520px;height:520px;background:var(--orange);left:1500px;top:-180px"></div>
+  <div class="blob" id="b3" style="width:380px;height:380px;background:#7b5cff;left:900px;top:820px"></div>
+
+  <div id="logoBar">
+    <div id="logoBox"></div>
+  </div>
+
+  <!-- SCENE 1 : hook -->
+  <div class="scene" id="s1">
+    <div class="abs" id="s1grad" style="left:220px;top:180px;width:620px;height:820px"></div>
+    <div class="abs" id="s1q" style="left:900px;top:300px;width:900px">
+      <div class="h1" id="s1l1">خرّيجينا الأعزاء..</div>
+      <div class="h1" id="s1l2" style="margin-top:20px"><span class="hl">هل حدّثتم</span> بياناتكم؟</div>
+    </div>
+    <div class="abs" id="s1bubble" style="left:640px;top:230px"></div>
+  </div>
+
+  <!-- SCENE 2 : campaign announcement -->
+  <div class="scene" id="s2">
+    <div class="card" id="s2card" style="left:260px;top:150px;width:1400px;height:700px;overflow:hidden">
+      <div style="height:90px;background:var(--navy2);display:flex;align-items:center;padding:0 34px;gap:14px;direction:ltr">
+        <i style="width:22px;height:22px;border-radius:50%;background:#ff5f57;display:block"></i>
+        <i style="width:22px;height:22px;border-radius:50%;background:#febc2e;display:block"></i>
+        <i style="width:22px;height:22px;border-radius:50%;background:#28c840;display:block"></i>
+        <div style="margin-left:30px;flex:1;height:48px;border-radius:24px;background:rgba(255,255,255,.15);color:#cfe0ff;font-size:24px;line-height:48px;padding:0 26px;font-family:Cairo">utas.edu.om / alumni-update</div>
+      </div>
+      <div id="s2logo" style="position:absolute;top:130px;left:50%;transform:translateX(-50%)"></div>
+      <div class="abs" id="s2title" style="top:330px;left:80px;right:80px;color:var(--navy);text-align:center">
+        <div style="font-size:42px;font-weight:700;color:var(--blue)" id="s2k">إعلان</div>
+        <div style="font-size:66px;font-weight:900;line-height:1.35" id="s2t1">الحملة الإلكترونية لتحديث بيانات خريجي</div>
+        <div style="font-size:52px;font-weight:900;line-height:1.35;color:var(--blue)" id="s2t2">جامعة التقنية والعلوم التطبيقية بعبري</div>
+        <div style="font-size:42px;font-weight:700;color:#f08a00;margin-top:6px" id="s2t3">وتتبّع مساراتهم بعد التخرج</div>
+      </div>
+    </div>
+    <div class="abs" id="s2dept" style="left:50%;top:875px;transform:translateX(-50%);white-space:nowrap">
+      <span class="pill" style="font-size:30px;background:rgba(255,255,255,.14)">مركز التدريب والتوجيه الوظيفي · قسم متابعة الخريجين</span>
+    </div>
+  </div>
+
+  <!-- SCENE 3 : goals -->
+  <div class="scene" id="s3">
+    <div class="h2 abs" id="s3h" style="left:0;right:0;top:170px">لماذا نحدّث <span class="hl">بياناتكم؟</span></div>
+    <div id="s3icons"></div>
+    <svg class="abs" id="s3bridge" style="left:160px;top:330px" width="1600" height="60" viewBox="0 0 1600 60"><path id="s3path" d="M0 30 Q400 -10 800 30 T1600 30" stroke="#22c3e6" stroke-width="6" fill="none" stroke-dasharray="14 14"/></svg>
+  </div>
+
+  <!-- SCENE 4 : prizes -->
+  <div class="scene" id="s4">
+    <div id="s4conf"></div>
+    <div class="abs" id="s4big" style="left:960px;top:150px;width:860px;text-align:center">
+      <div style="font-size:60px;font-weight:700">تنتظركم</div>
+      <div style="font-size:230px;font-weight:900;line-height:1;color:var(--gold);text-shadow:0 12px 0 #b86400" id="s4num">30</div>
+      <div style="font-size:84px;font-weight:900">جائزة قيّمة!</div>
+    </div>
+    <div class="cat" id="s4c1" style="left:960px;top:650px;width:420px"><div class="t">الفئة الأولى</div><div class="d">أول 10 مسجلين</div></div>
+    <div class="cat" id="s4c2" style="left:1410px;top:650px;width:450px"><div class="t">الفئة الثانية</div><div class="d">السحب للرقم الرابح</div></div>
+    <div id="s4gifts"></div>
+  </div>
+
+  <!-- SCENE 5 : CTA + QR -->
+  <div class="scene" id="s5">
+    <div class="abs" id="s5left" style="right:70px;top:200px;width:1020px;text-align:center">
+      <div class="h2">امسح الرمز وسجّل الآن</div>
+      <div style="margin-top:44px"><span class="btn" id="s5btn">شاركنا التحديث الآن</span></div>
+      <div id="s5date" style="margin-top:70px;display:inline-flex;align-items:center;gap:22px;background:rgba(255,255,255,.1);border:2px solid rgba(255,255,255,.25);border-radius:24px;padding:16px 36px">
+        <svg width="70" height="70" viewBox="0 0 24 24" fill="none" stroke="#ffc83d" stroke-width="2"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>
+        <div style="text-align:right"><div style="font-size:28px;font-weight:700;color:#bcd2ff">فترة الحملة</div><div style="font-size:44px;font-weight:900;white-space:nowrap">من 22 نوفمبر إلى 24 ديسمبر 2026م</div></div>
+      </div>
+    </div>
+    <div class="card" id="s5qr" style="left:170px;top:180px;width:620px;height:720px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px">
+      <img src="qr.png" style="width:500px;height:500px;display:block;image-rendering:pixelated">
+      <div style="font-size:36px;font-weight:900;color:var(--navy)">📱 امسح للتسجيل</div>
+      <div id="scanline" style="position:absolute;left:60px;right:60px;height:6px;background:var(--cyan);box-shadow:0 0 20px var(--cyan);border-radius:3px"></div>
+    </div>
+  </div>
+
+  <div id="sub"></div>
+  <div id="progress"></div>
+</div>
+
+<script src="cfg.js"></script>
+<script>
+/* ---------- config (filled by render script) ---------- */
+window.CFG = window.CFG || {
+  dur: 60,
+  scenes: [[0,6],[6,20],[20,33],[33,45],[45,60]],
+  subs: []
+};
+const HAS_LOGO = window.HAS_LOGO || false;
+
+/* ---------- helpers ---------- */
+const $ = s => document.querySelector(s);
+const clamp=(x,a=0,b=1)=>Math.min(b,Math.max(a,x));
+const lerp=(a,b,t)=>a+(b-a)*t;
+const eo=t=>1-Math.pow(1-clamp(t),3);
+const eio=t=>{t=clamp(t);return t<.5?4*t*t*t:1-Math.pow(-2*t+2,3)/2};
+const back=t=>{t=clamp(t);const c1=1.70158,c3=c1+1;return 1+c3*Math.pow(t-1,3)+c1*Math.pow(t-1,2)};
+const prog=(t,a,d)=>clamp((t-a)/d);
+function set(el,{x=0,y=0,s=1,r=0,o=1,base=''}={}){el.style.transform=`${base} translate(${x}px,${y}px) rotate(${r}deg) scale(${s})`;el.style.opacity=o}
+
+/* ---------- logo ---------- */
+const logoHTML = HAS_LOGO
+  ? `<img src="logo.png">`
+  : `<svg width="90" height="90" viewBox="0 0 100 100"><circle cx="50" cy="50" r="46" fill="#0b2559"/><path d="M50 18 L82 34 L50 50 L18 34Z" fill="#ffc83d"/><path d="M30 42v16c0 6 9 12 20 12s20-6 20-12V42L50 52Z" fill="#22c3e6"/><path d="M80 35v22" stroke="#ffc83d" stroke-width="4"/></svg>
+     <div class="lt" style="margin-right:14px"><b>جامعة التقنية والعلوم التطبيقية</b><span>عبري · University of Technology and Applied Sciences</span></div>`;
+$('#logoBox').innerHTML = logoHTML;
+$('#logoBox').style.direction='rtl';
+$('#s2logo').innerHTML = `<div style="display:flex;align-items:center;gap:10px;direction:rtl;height:150px">${HAS_LOGO?'<img src="logo.png" style="height:150px">':logoHTML.replace('width="90" height="90"','width="140" height="140"').replace('font-size:24px','font-size:34px')}</div>`;
+
+/* ---------- avatar (flat cartoon graduate) ---------- */
+function avatar({skin='#f2c9a0',gown='#123a80',accent='#ffc83d',hijab=null,phone=true,scale=1}={}){
+  const head = hijab
+   ? `<path d="M120 40c-44 0-66 32-66 74 0 30 8 52 20 66h92c12-14 20-36 20-66 0-42-22-74-66-74z" fill="${hijab}"/><ellipse cx="120" cy="118" rx="44" ry="50" fill="${skin}"/>`
+   : `<ellipse cx="120" cy="118" rx="50" ry="56" fill="${skin}"/><path d="M70 104c4-36 28-54 50-54s46 18 50 54c-14-14-34-20-50-20s-36 6-50 20z" fill="#2b1a10"/>`;
+  return `<svg viewBox="0 0 240 420" width="${240*scale}" height="${420*scale}">
+   <path d="M30 420c0-140 40-222 90-222s90 82 90 222z" fill="${gown}"/>
+   <rect x="104" y="160" width="32" height="48" fill="${skin}"/>
+   <path d="M120 204l-30 52 30 24 30-24z" fill="${accent}"/>
+   ${head}
+   <g class="eyes"><ellipse cx="102" cy="120" rx="6" ry="7" fill="#1b1b1b"/><ellipse cx="138" cy="120" rx="6" ry="7" fill="#1b1b1b"/></g>
+   <path d="M98 142q22 22 44 0" stroke="#7a2b1a" stroke-width="6" fill="#fff" stroke-linecap="round"/>
+   <circle cx="88" cy="140" r="9" fill="#ff9a8a" opacity=".5"/><circle cx="152" cy="140" r="9" fill="#ff9a8a" opacity=".5"/>
+   <g transform="translate(0,-8)"><path d="M40 62 L120 30 L200 62 L120 94Z" fill="#0b1b3a"/><rect x="86" y="70" width="68" height="26" fill="#0b1b3a"/><path d="M196 62v52" stroke="${accent}" stroke-width="5"/><circle cx="196" cy="118" r="8" fill="${accent}"/></g>
+   ${phone?`<g class="phone"><rect x="150" y="270" width="64" height="110" rx="12" fill="#0b1b3a"/><rect x="157" y="282" width="50" height="84" rx="6" fill="#22c3e6"/><path d="M168 320l10 10 18-20" stroke="#fff" stroke-width="6" fill="none" stroke-linecap="round"/><circle cx="150" cy="330" r="22" fill="${skin}"/></g>`:''}
+  </svg>`;
+}
+$('#s1grad').innerHTML = avatar({scale:1.9});
+$('#s1bubble').innerHTML = `<svg width="200" height="170" viewBox="0 0 200 170"><path d="M20 10h160a14 14 0 0 1 14 14v90a14 14 0 0 1-14 14H80l-40 34 6-34H20A14 14 0 0 1 6 114V24A14 14 0 0 1 20 10z" fill="#fff"/><text x="100" y="98" font-size="90" font-weight="900" text-anchor="middle" fill="#f08a00" font-family="Cairo">؟</text></svg>`;
+
+/* scene 3 icons */
+const icons = [
+  {t:'قاعدة بيانات<br>متكاملة', svg:`<svg viewBox="0 0 64 64" fill="none" stroke="#22c3e6" stroke-width="4"><ellipse cx="32" cy="14" rx="20" ry="8"/><path d="M12 14v36c0 4.4 9 8 20 8s20-3.6 20-8V14"/><path d="M12 26c0 4.4 9 8 20 8s20-3.6 20-8M12 38c0 4.4 9 8 20 8s20-3.6 20-8"/></svg>`},
+  {t:'نِسب<br>التوظيف', svg:`<svg viewBox="0 0 64 64"><circle cx="32" cy="32" r="24" fill="none" stroke="rgba(255,255,255,.2)" stroke-width="12"/><circle id="donut" cx="32" cy="32" r="24" fill="none" stroke="#ffc83d" stroke-width="12" stroke-dasharray="0 151" transform="rotate(-90 32 32)"/><text id="donutT" x="32" y="38" text-anchor="middle" font-size="15" font-weight="900" fill="#fff" font-family="Cairo">0%</text></svg>`},
+  {t:'مؤشرات التنمية<br>والتطوير', svg:`<svg viewBox="0 0 64 64"><rect class="bar" x="8" y="40" width="10" height="16" fill="#22c3e6"/><rect class="bar" x="22" y="30" width="10" height="26" fill="#22c3e6"/><rect class="bar" x="36" y="20" width="10" height="36" fill="#22c3e6"/><rect class="bar" x="50" y="8" width="10" height="48" fill="#ffc83d"/><path d="M6 58h56" stroke="#fff" stroke-width="3"/></svg>`},
+  {t:'تطوير برامج<br>التأهيل', svg:`<svg viewBox="0 0 64 64" fill="none" stroke="#ffc83d" stroke-width="4" stroke-linecap="round"><path d="M32 6l6 12 13 2-9 9 2 13-12-6-12 6 2-13-9-9 13-2z"/><path d="M20 46l-6 14 10-4 4 8 4-14M44 46l6 14-10-4-4 8"/></svg>`},
+];
+$('#s3icons').innerHTML = icons.map((ic,i)=>`<div class="icon" id="ic${i}" style="left:${1460-i*400}px;top:440px">${ic.svg}<div>${ic.t}</div></div>`).join('');
+
+/* scene 4 gifts */
+function gift(c1,c2,w){return `<svg width="${w}" height="${w}" viewBox="0 0 100 100"><rect x="10" y="40" width="80" height="56" rx="6" fill="${c1}"/><rect x="4" y="28" width="92" height="18" rx="5" fill="${c2}"/><rect x="44" y="28" width="12" height="68" fill="#ffc83d"/><path d="M50 28c-10-22-34-18-26-4 4 6 26 4 26 4zM50 28c10-22 34-18 26-4-4 6-26 4-26 4z" fill="#ffc83d"/></svg>`}
+const gifts=[[220,560,'#e8455d','#ff6b80',300],[520,620,'#1f6fd1','#4b95ee',240],[120,330,'#7b5cff','#9d87ff',200],[600,330,'#18b38a','#3dd6ac',180],[400,170,'#f08a00','#ffb53a',150]];
+$('#s4gifts').innerHTML = gifts.map((g,i)=>`<div class="prize" id="g${i}" style="left:${g[0]}px;top:${g[1]}px">${gift(g[2],g[3],g[4])}</div>`).join('');
+const confColors=['#ffc83d','#22c3e6','#ff6b80','#7b5cff','#3dd6ac','#fff'];
+let rnd=7;const R=()=>(rnd=(rnd*16807)%2147483647)/2147483647;
+const confs=[];for(let i=0;i<90;i++){confs.push({x:R()*1920,d:R()*2,sp:300+R()*400,rot:R()*720,c:confColors[i%6],sw:R()*80});}
+$('#s4conf').innerHTML = confs.map((c,i)=>`<div class="conf" id="cf${i}" style="background:${c.c}"></div>`).join('');
+
+/* ---------- render(t) ---------- */
+function sceneAlpha(t,[a,b]){const f=.5;return clamp((t-a)/f)*clamp((b-t)/f)}
+function render(t){
+  const S=CFG.scenes;
+  // background drift
+  $('#grid').style.transform=`translate(${(t*12)%56}px,${(t*8)%56}px)`;
+  set($('#b1'),{x:Math.sin(t*.4)*80,y:Math.cos(t*.3)*60});
+  set($('#b2'),{x:Math.cos(t*.35)*70,y:Math.sin(t*.45)*50});
+  set($('#b3'),{x:Math.sin(t*.5)*90,y:Math.cos(t*.25)*40});
+  $('#progress').style.width=(t/CFG.dur*100)+'%';
+  // logo intro
+  const lp=eo(prog(t,0.2,0.8)); set($('#logoBar'),{y:lerp(-160,0,lp),o:lp});
+  // scene alphas (cross-fade with slide)
+  ['#s1','#s2','#s3','#s4','#s5'].forEach((id,i)=>{const a=sceneAlpha(t,S[i]);const el=$(id);el.style.opacity=a;el.style.visibility=a>0?'visible':'hidden';el.style.transform=`translateX(${(1-a)*(t<S[i][0]+1?-120:120)}px)`});
+
+  // S1
+  let a=S[0][0], L=S[0][1]-a;
+  {const p=back(prog(t,a+.2,.8)); set($('#s1grad'),{y:lerp(500,0,p)+Math.sin(t*3)*6,s:1});
+   set($('#s1l1'),{x:lerp(-300,0,eo(prog(t,a+.6,.7))),o:eo(prog(t,a+.6,.7))});
+   set($('#s1l2'),{x:lerp(-300,0,eo(prog(t,a+1.6,.7))),o:eo(prog(t,a+1.6,.7))});
+   const bp=back(prog(t,a+1.2,.6)); set($('#s1bubble'),{s:bp,o:clamp(bp),r:Math.sin(t*4)*6});
+   const ph=document.querySelector('#s1grad .phone'); if(ph) ph.setAttribute('transform',`rotate(${Math.sin(t*5)*4} 180 320)`);
+  }
+  // S2
+  a=S[1][0];
+  {const p=back(prog(t,a+.2,.8)); set($('#s2card'),{s:lerp(.6,1,p),o:clamp(p*1.5),y:lerp(200,0,eo(prog(t,a+.2,.8)))});
+   set($('#s2logo'),{base:'translateX(-50%)',s:back(prog(t,a+.9,.6)),o:clamp(prog(t,a+.9,.3))});
+   ['#s2k','#s2t1','#s2t2','#s2t3'].forEach((id,i)=>{const q=eo(prog(t,a+1.6+i*.6,.6));set($(id),{y:lerp(40,0,q),o:q})});
+   const q=eo(prog(t,a+4.2,.6)); set($('#s2dept'),{base:'translateX(-50%)',y:lerp(60,0,q),o:q});
+  }
+  // S3
+  a=S[2][0]; L=S[2][1]-a;
+  {set($('#s3h'),{y:lerp(-60,0,eo(prog(t,a+.2,.6))),o:eo(prog(t,a+.2,.6))});
+   const path=$('#s3path'); path.style.opacity=eo(prog(t,a+.6,1)); path.setAttribute('stroke-dashoffset',-t*40);
+   const step=(L-2.5)/4;
+   icons.forEach((_,i)=>{const q=back(prog(t,a+1+i*step,.7));set($('#ic'+i),{y:lerp(120,0,clamp(q))+Math.sin(t*2+i)*6,s:lerp(.5,1,q),o:clamp(q*1.4)})});
+   const dp=eo(prog(t,a+1+step,1.6)); const pct=Math.round(dp*87);
+   $('#donut').setAttribute('stroke-dasharray',`${151*pct/100} 151`); $('#donutT').textContent=pct+'%';
+   document.querySelectorAll('#ic2 .bar').forEach((b,i)=>{const q=eo(prog(t,a+1+2*step+i*.15,.6));b.style.transform=`scaleY(${q})`;b.style.transformOrigin='center 56px';b.style.transformBox='view-box'});
+  }
+  // S4
+  a=S[3][0];
+  {const n=Math.round(eo(prog(t,a+3.2,1.2))*30); $('#s4num').textContent=n;
+   set($('#s4big'),{s:back(prog(t,a+2.8,.7)),o:clamp(prog(t,a+2.8,.4))});
+   gifts.forEach((g,i)=>{const q=back(prog(t,a+.3+i*.18,.7));set($('#g'+i),{y:lerp(-700,0,clamp(q))+Math.sin(t*3+i)*10,r:Math.sin(t*2+i)*6,s:q>0?1:0})});
+   [['#s4c1',7.4],['#s4c2',10.0]].forEach(([id,d])=>{const q=back(prog(t,a+d,.6));set($(id),{s:lerp(.4,1,q),o:clamp(q)})});
+   confs.forEach((c,i)=>{const tt=t-(a+.6)-c.d;const el=$('#cf'+i);if(tt<0){el.style.opacity=0;return}
+     el.style.opacity=1;el.style.left=(c.x+Math.sin(tt*3+c.sw)*40)+'px';el.style.top=(-40+tt*c.sp)%1180+'px';el.style.transform=`rotate(${c.rot+tt*300}deg)`});
+  }
+  // S5
+  a=S[4][0];
+  {const q=back(prog(t,a+.2,.8)); set($('#s5qr'),{s:lerp(.3,1,q),o:clamp(q),r:lerp(-12,0,clamp(q))});
+   const sl=(t-a)%2/2; $('#scanline').style.top=(90+Math.abs(Math.sin(sl*Math.PI))*500)+'px'; $('#scanline').style.opacity=t>a+1?.85:0;
+   set($('#s5left'),{x:lerp(-200,0,eo(prog(t,a+.6,.8))),o:eo(prog(t,a+.6,.8))});
+   const pulse=1+Math.max(0,Math.sin((t-a)*4))*.06; set($('#s5btn'),{s:prog(t,a+1.2,.01)?pulse:0});
+   const dq=eo(prog(t,a+2.4,.7)); set($('#s5date'),{y:lerp(60,0,dq),o:dq});
+  }
+  // subtitles
+  const cur=CFG.subs.find(s=>t>=s[0]&&t<s[1]);
+  const sub=$('#sub'); sub.textContent=cur?cur[2]:''; sub.style.opacity=cur?1:0;
+}
+window.render=render;
+render(Number(new URLSearchParams(location.search).get('t')||0));
+</script>
+</body>
+</html>
