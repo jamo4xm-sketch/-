@@ -40,14 +40,34 @@ body{font-family:Cairo,sans-serif;color:#fff}
 /* cards */
 .card{position:absolute;background:#fff;color:var(--ink);border-radius:28px;box-shadow:0 30px 60px rgba(0,0,0,.35)}
 .icon{position:absolute;width:300px;height:330px;background:rgba(255,255,255,.08);border:2px solid rgba(255,255,255,.18);border-radius:32px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;backdrop-filter:blur(4px)}
-.icon svg{width:150px;height:150px}
-.icon div{font-size:34px;font-weight:900;text-align:center;line-height:1.3}
+.icon svg{width:130px;height:130px;flex:none}
+.icon div{font-size:36px;white-space:nowrap;font-weight:900;text-align:center;line-height:1.3}
 .prize{position:absolute}
-.cat{position:absolute;width:640px;padding:26px 34px;border-radius:26px;background:rgba(255,255,255,.1);border:2px solid rgba(255,255,255,.2)}
+.cat{position:absolute;width:640px;padding:26px 34px;border-radius:26px;background:#123a80;box-shadow:0 16px 30px rgba(0,0,0,.35);border:2px solid rgba(255,255,255,.2)}
 .cat .t{font-size:30px;font-weight:700;color:var(--gold)}
 .cat .d{font-size:46px;font-weight:900;line-height:1.3}
 .btn{display:inline-block;background:linear-gradient(180deg,#ffb53a,#f08a00);color:#fff;font-weight:900;font-size:58px;padding:14px 60px;border-radius:999px;box-shadow:0 14px 0 #b86400,0 24px 40px rgba(0,0,0,.35)}
 .conf{position:absolute;width:16px;height:26px;border-radius:4px}
+
+/* ===== UTAS Ibri flyer theme ===== */
+:root{--navy:#2b3990;--navy2:#3858a8;--blue:#3858a8;--cyan:#3b8fd9;--orange:#f7941d;--orange2:#e8692a;--gold:#f7941d;--ink:#2b2f6b}
+#stage{background:#f3f3f1 url(paper.jpg) center/cover}
+body{color:var(--ink)}
+.grid{background-image:radial-gradient(rgba(56,88,168,.10) 2px,transparent 2px)}
+.blob{display:none}
+.h1,.h2{color:var(--navy);text-shadow:none}
+.hl{color:var(--orange)}
+#logoBar{top:30px;right:56px}
+#logoBox{background:none;box-shadow:none;padding:0;height:auto}
+#logoBox img{height:118px}
+#sub{background:var(--navy);color:#fff;border:none;box-shadow:0 10px 24px rgba(43,57,144,.3);bottom:150px}
+.icon{background:#fff;border:3px solid transparent;background-image:linear-gradient(#fff,#fff),linear-gradient(135deg,#f7941d,#3858a8);background-origin:border-box;background-clip:padding-box,border-box;box-shadow:0 14px 30px rgba(43,57,144,.15);color:var(--navy)}
+.cat{background:#fff!important;color:var(--navy);border:3px solid var(--orange)!important;box-shadow:0 14px 30px rgba(43,57,144,.18)!important}
+.cat .t{color:var(--orange2)}
+.card{box-shadow:0 24px 50px rgba(43,57,144,.22)}
+#frame{position:absolute;left:0;bottom:0;width:1920px;height:240px;z-index:40;pointer-events:none}
+#frameTop{position:absolute;left:0;top:0;width:560px;height:170px;z-index:1;pointer-events:none}
+#footer{position:absolute;left:0;right:0;bottom:16px;z-index:45;display:flex;justify-content:center;align-items:center;gap:28px;color:#fff;font-weight:700}
 </style>
 </head>
 <body>
@@ -63,73 +83,92 @@ body{font-family:Cairo,sans-serif;color:#fff}
 
   <!-- SCENE 1 : hook -->
   <div class="scene" id="s1">
-    <div class="abs" id="s1grad" style="left:220px;top:180px;width:620px;height:820px"></div>
-    <div class="abs" id="s1q" style="left:900px;top:300px;width:900px">
-      <div class="h1" id="s1l1">خرّيجينا الأعزاء..</div>
-      <div class="h1" id="s1l2" style="margin-top:20px"><span class="hl">هل حدّثتم</span> بياناتكم؟</div>
+    <svg class="abs" id="s1glow" style="left:170px;top:170px" width="660" height="700" viewBox="0 0 660 700"><defs><linearGradient id="hx" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#d9e6ff"/><stop offset="1" stop-color="#3b8fd9"/></linearGradient></defs>
+<path d="M330 30 L610 185 L610 505 L330 660 L50 505 L50 185Z" fill="#f7941d" transform="translate(0,24)"/>
+<path d="M330 30 L610 185 L610 505 L330 660 L50 505 L50 185Z" fill="url(#hx)" stroke="#fff" stroke-width="14" stroke-linejoin="round"/></svg>
+    <div class="abs" id="s1grad" style="left:360px;top:130px;width:300px;height:760px"><img src="grad.png" style="height:760px;display:block;filter:drop-shadow(0 16px 22px rgba(20,30,90,.35))"></div>
+    <div class="abs" id="s1q" style="left:880px;top:260px;width:940px">
+      <div class="h1" id="s1l1">خريجنا الأعزاء..</div>
+      <div class="h1" id="s1l2" style="margin-top:20px">هل حدثتم <span class="hl">بياناتكم</span><br>سابقاً؟</div>
     </div>
-    <div class="abs" id="s1bubble" style="left:640px;top:230px"></div>
+    <div class="abs" id="s1bubble" style="left:600px;top:150px"></div>
   </div>
 
   <!-- SCENE 2 : campaign announcement -->
   <div class="scene" id="s2">
-    <div class="card" id="s2card" style="left:260px;top:150px;width:1400px;height:700px;overflow:hidden">
+    <div class="card" id="s2card" style="left:260px;top:175px;width:1400px;height:640px;overflow:hidden">
       <div style="height:90px;background:var(--navy2);display:flex;align-items:center;padding:0 34px;gap:14px;direction:ltr">
         <i style="width:22px;height:22px;border-radius:50%;background:#ff5f57;display:block"></i>
         <i style="width:22px;height:22px;border-radius:50%;background:#febc2e;display:block"></i>
         <i style="width:22px;height:22px;border-radius:50%;background:#28c840;display:block"></i>
-        <div style="margin-left:30px;flex:1;height:48px;border-radius:24px;background:rgba(255,255,255,.15);color:#cfe0ff;font-size:24px;line-height:48px;padding:0 26px;font-family:Cairo">utas.edu.om / alumni-update</div>
+        <div style="margin-left:30px;flex:1;height:48px;border-radius:24px;background:rgba(255,255,255,.15);color:#cfe0ff;font-size:24px;line-height:48px;padding:0 26px;font-family:Cairo">pedstech.om/utas</div>
       </div>
       <div id="s2logo" style="position:absolute;top:130px;left:50%;transform:translateX(-50%)"></div>
-      <div class="abs" id="s2title" style="top:330px;left:80px;right:80px;color:var(--navy);text-align:center">
+      <div class="abs" id="s2title" style="top:300px;left:80px;right:80px;color:var(--navy);text-align:center">
         <div style="font-size:42px;font-weight:700;color:var(--blue)" id="s2k">إعلان</div>
         <div style="font-size:66px;font-weight:900;line-height:1.35" id="s2t1">الحملة الإلكترونية لتحديث بيانات خريجي</div>
         <div style="font-size:52px;font-weight:900;line-height:1.35;color:var(--blue)" id="s2t2">جامعة التقنية والعلوم التطبيقية بعبري</div>
         <div style="font-size:42px;font-weight:700;color:#f08a00;margin-top:6px" id="s2t3">وتتبّع مساراتهم بعد التخرج</div>
       </div>
     </div>
-    <div class="abs" id="s2dept" style="left:50%;top:875px;transform:translateX(-50%);white-space:nowrap">
-      <span class="pill" style="font-size:30px;background:rgba(255,255,255,.14)">مركز التدريب والتوجيه الوظيفي · قسم متابعة الخريجين</span>
+    <div class="abs" id="s2dept" style="display:none;left:50%;top:800px;transform:translateX(-50%);white-space:nowrap">
+      <span class="pill" style="font-size:30px;background:var(--navy)">مركز التدريب والتوجيه الوظيفي · قسم متابعة الخريجين</span>
     </div>
   </div>
 
   <!-- SCENE 3 : goals -->
   <div class="scene" id="s3">
-    <div class="h2 abs" id="s3h" style="left:0;right:0;top:170px">لماذا نحدّث <span class="hl">بياناتكم؟</span></div>
+    <div class="abs" id="s3h" style="left:0;right:0;top:0"></div>
+    <div class="abs" id="s3group" style="left:50%;top:490px;transform:translateX(-50%)"><img id="s3gimg" src="group.png" style="height:320px;display:block;filter:drop-shadow(0 16px 24px rgba(0,0,0,.45))"></div>
     <div id="s3icons"></div>
-    <svg class="abs" id="s3bridge" style="left:160px;top:330px" width="1600" height="60" viewBox="0 0 1600 60"><path id="s3path" d="M0 30 Q400 -10 800 30 T1600 30" stroke="#22c3e6" stroke-width="6" fill="none" stroke-dasharray="14 14"/></svg>
+    <svg class="abs" id="s3bridge" style="left:160px;top:330px;display:none" width="1600" height="60" viewBox="0 0 1600 60"><path id="s3path" d="M0 30 Q400 -10 800 30 T1600 30" stroke="#22c3e6" stroke-width="6" fill="none" stroke-dasharray="14 14"/></svg>
   </div>
 
   <!-- SCENE 4 : prizes -->
   <div class="scene" id="s4">
     <div id="s4conf"></div>
-    <div class="abs" id="s4big" style="left:960px;top:150px;width:860px;text-align:center">
-      <div style="font-size:60px;font-weight:700">تنتظركم</div>
-      <div style="font-size:230px;font-weight:900;line-height:1;color:var(--gold);text-shadow:0 12px 0 #b86400" id="s4num">30</div>
-      <div style="font-size:84px;font-weight:900">جائزة قيّمة!</div>
+    <div class="abs" id="s4big" style="left:960px;top:170px;width:860px;text-align:center">
+      
+      <div style="font-size:230px;font-weight:900;line-height:1;color:var(--orange);text-shadow:0 10px 0 #c4561a" id="s4num">30</div>
+      <div style="font-size:84px;font-weight:900;color:var(--navy)">جائزة قيّمة!</div>
     </div>
-    <div class="cat" id="s4c1" style="left:960px;top:650px;width:420px"><div class="t">الفئة الأولى</div><div class="d">أول 10 مسجلين</div></div>
-    <div class="cat" id="s4c2" style="left:1410px;top:650px;width:450px"><div class="t">الفئة الثانية</div><div class="d">السحب للرقم الرابح</div></div>
+    <div class="cat" id="s4c1" style="left:880px;top:610px;width:440px"><div class="t">الفئة الأولى:</div><div class="d">أول 10 مسجلين.</div></div>
+    <div class="cat" id="s4c2" style="left:1350px;top:610px;width:520px"><div class="t">الفئة الثانية:</div><div class="d">عبر السحب للرقم الرابح.</div></div>
     <div id="s4gifts"></div>
   </div>
 
   <!-- SCENE 5 : CTA + QR -->
   <div class="scene" id="s5">
-    <div class="abs" id="s5left" style="right:70px;top:200px;width:1020px;text-align:center">
-      <div class="h2">امسح الرمز وسجّل الآن</div>
-      <div style="margin-top:44px"><span class="btn" id="s5btn">شاركنا التحديث الآن</span></div>
-      <div id="s5date" style="margin-top:70px;display:inline-flex;align-items:center;gap:22px;background:rgba(255,255,255,.1);border:2px solid rgba(255,255,255,.25);border-radius:24px;padding:16px 36px">
-        <svg width="70" height="70" viewBox="0 0 24 24" fill="none" stroke="#ffc83d" stroke-width="2"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>
-        <div style="text-align:right"><div style="font-size:28px;font-weight:700;color:#bcd2ff">فترة الحملة</div><div style="font-size:44px;font-weight:900;white-space:nowrap">من 22 نوفمبر إلى 24 ديسمبر 2026م</div></div>
+    <div class="abs" id="s5left" style="right:90px;top:200px;width:1000px;text-align:center">
+      <div style="font-size:40px;font-weight:900;color:var(--navy)">رابط الاستمارة الإلكترونية</div>
+      <div id="s5link" style="margin:14px auto 0;display:flex;align-items:center;gap:16px;direction:ltr;background:#fff;color:#2b3990;border:3px solid #3858a8;border-radius:999px;padding:12px 34px;width:fit-content;box-shadow:0 14px 30px rgba(43,57,144,.18)">
+        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#1f6fd1" stroke-width="2.4" stroke-linecap="round"><path d="M10 14a5 5 0 0 0 7 0l3-3a5 5 0 0 0-7-7l-1 1"/><path d="M14 10a5 5 0 0 0-7 0l-3 3a5 5 0 0 0 7 7l1-1"/></svg>
+        <span style="font-size:36px;font-weight:700;font-family:Cairo">pedstech.om/utas/index.php?s=c8fdda37</span>
+      </div>
+      <div style="margin-top:70px;position:relative;display:inline-block"><span class="btn" id="s5btn">شاركنا التحديث الآن</span>
+        <svg id="s5hand" class="abs" style="left:-120px;top:40px" width="90" height="90" viewBox="0 0 24 24"><path d="M9 11V5.5a1.5 1.5 0 0 1 3 0V10l4.6.9a2 2 0 0 1 1.6 2.3l-.9 5A2 2 0 0 1 15.3 20H11a2 2 0 0 1-1.6-.8L6 14.5a1.5 1.5 0 0 1 2.3-1.9z" fill="#fff" stroke="#0b2559" stroke-width="1.2"/></svg>
       </div>
     </div>
-    <div class="card" id="s5qr" style="left:170px;top:180px;width:620px;height:720px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px">
-      <img src="qr.png" style="width:500px;height:500px;display:block;image-rendering:pixelated">
-      <div style="font-size:36px;font-weight:900;color:var(--navy)">📱 امسح للتسجيل</div>
+    <div class="card" id="s5qr" style="left:190px;top:150px;width:540px;height:590px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px">
+      <img src="qr.png" style="width:430px;height:430px;display:block;image-rendering:pixelated">
+      <div style="font-size:34px;font-weight:900;color:var(--navy)">امسح الرمز للتسجيل</div>
       <div id="scanline" style="position:absolute;left:60px;right:60px;height:6px;background:var(--cyan);box-shadow:0 0 20px var(--cyan);border-radius:3px"></div>
+    </div>
+    <div class="abs" id="s5date" style="left:0;right:0;top:770px;display:flex;justify-content:center">
+      <div style="display:flex;align-items:center;gap:22px;background:var(--orange);border-radius:22px;padding:12px 44px;box-shadow:0 12px 30px rgba(0,0,0,.35)">
+        <svg width="58" height="58" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>
+        <div style="font-size:48px;font-weight:900;white-space:nowrap">الفترة من 22 نوفمبر إلى 24 ديسمبر 2026م</div>
+      </div>
     </div>
   </div>
 
+  <svg id="frame" viewBox="0 0 1920 240" preserveAspectRatio="none">
+    <defs><linearGradient id="gB" x1="0" x2="1"><stop offset="0" stop-color="#2b3990"/><stop offset=".55" stop-color="#3858a8"/><stop offset="1" stop-color="#4a8fe0"/></linearGradient>
+    <linearGradient id="gO" x1="0" x2="1"><stop offset="0" stop-color="#e8692a"/><stop offset="1" stop-color="#f7a31d"/></linearGradient></defs>
+    <path id="wO" fill="url(#gO)"/><path id="wW" fill="#fff" opacity=".95"/><path id="wB" fill="url(#gB)"/>
+  </svg>
+  <svg id="frameTop" viewBox="0 0 560 170"><path d="M0 0H560C400 34 210 70 0 160Z" fill="#3858a8" opacity=".14"/><path d="M0 0H320C210 22 95 55 0 100Z" fill="#f7941d" opacity=".22"/></svg>
+  <div id="footer"><span style="font-size:24px">آفاق واسعة · broad Horizons</span><span style="opacity:.6">|</span><span style="font-size:24px;direction:ltr">utasibri · www.utas.edu.om/ibri</span></div>
   <div id="sub"></div>
   <div id="progress"></div>
 </div>
@@ -155,13 +194,13 @@ const prog=(t,a,d)=>clamp((t-a)/d);
 function set(el,{x=0,y=0,s=1,r=0,o=1,base=''}={}){el.style.transform=`${base} translate(${x}px,${y}px) rotate(${r}deg) scale(${s})`;el.style.opacity=o}
 
 /* ---------- logo ---------- */
-const logoHTML = HAS_LOGO
+const logoHTML = true
   ? `<img src="logo.png">`
   : `<svg width="90" height="90" viewBox="0 0 100 100"><circle cx="50" cy="50" r="46" fill="#0b2559"/><path d="M50 18 L82 34 L50 50 L18 34Z" fill="#ffc83d"/><path d="M30 42v16c0 6 9 12 20 12s20-6 20-12V42L50 52Z" fill="#22c3e6"/><path d="M80 35v22" stroke="#ffc83d" stroke-width="4"/></svg>
      <div class="lt" style="margin-right:14px"><b>جامعة التقنية والعلوم التطبيقية</b><span>عبري · University of Technology and Applied Sciences</span></div>`;
 $('#logoBox').innerHTML = logoHTML;
 $('#logoBox').style.direction='rtl';
-$('#s2logo').innerHTML = `<div style="display:flex;align-items:center;gap:10px;direction:rtl;height:150px">${HAS_LOGO?'<img src="logo.png" style="height:150px">':logoHTML.replace('width="90" height="90"','width="140" height="140"').replace('font-size:24px','font-size:34px')}</div>`;
+$('#s2logo').innerHTML = `<div style="display:flex;align-items:center;gap:10px;direction:rtl;height:150px">${true?'<img src="logo.png" style="height:130px">':logoHTML.replace('width="90" height="90"','width="140" height="140"').replace('font-size:24px','font-size:34px')}</div>`;
 
 /* ---------- avatar (flat cartoon graduate) ---------- */
 function avatar({skin='#f2c9a0',gown='#123a80',accent='#ffc83d',hijab=null,phone=true,scale=1}={}){
@@ -180,23 +219,22 @@ function avatar({skin='#f2c9a0',gown='#123a80',accent='#ffc83d',hijab=null,phone
    ${phone?`<g class="phone"><rect x="150" y="270" width="64" height="110" rx="12" fill="#0b1b3a"/><rect x="157" y="282" width="50" height="84" rx="6" fill="#22c3e6"/><path d="M168 320l10 10 18-20" stroke="#fff" stroke-width="6" fill="none" stroke-linecap="round"/><circle cx="150" cy="330" r="22" fill="${skin}"/></g>`:''}
   </svg>`;
 }
-$('#s1grad').innerHTML = avatar({scale:1.9});
+
 $('#s1bubble').innerHTML = `<svg width="200" height="170" viewBox="0 0 200 170"><path d="M20 10h160a14 14 0 0 1 14 14v90a14 14 0 0 1-14 14H80l-40 34 6-34H20A14 14 0 0 1 6 114V24A14 14 0 0 1 20 10z" fill="#fff"/><text x="100" y="98" font-size="90" font-weight="900" text-anchor="middle" fill="#f08a00" font-family="Cairo">؟</text></svg>`;
 
 /* scene 3 icons */
 const icons = [
   {t:'قاعدة بيانات<br>متكاملة', svg:`<svg viewBox="0 0 64 64" fill="none" stroke="#22c3e6" stroke-width="4"><ellipse cx="32" cy="14" rx="20" ry="8"/><path d="M12 14v36c0 4.4 9 8 20 8s20-3.6 20-8V14"/><path d="M12 26c0 4.4 9 8 20 8s20-3.6 20-8M12 38c0 4.4 9 8 20 8s20-3.6 20-8"/></svg>`},
-  {t:'نِسب<br>التوظيف', svg:`<svg viewBox="0 0 64 64"><circle cx="32" cy="32" r="24" fill="none" stroke="rgba(255,255,255,.2)" stroke-width="12"/><circle id="donut" cx="32" cy="32" r="24" fill="none" stroke="#ffc83d" stroke-width="12" stroke-dasharray="0 151" transform="rotate(-90 32 32)"/><text id="donutT" x="32" y="38" text-anchor="middle" font-size="15" font-weight="900" fill="#fff" font-family="Cairo">0%</text></svg>`},
+  {t:'رسوم بيانية توضح<br>نسب التوظيف', svg:`<svg viewBox="0 0 64 64"><circle cx="32" cy="32" r="24" fill="none" stroke="rgba(255,255,255,.2)" stroke-width="12"/><circle id="donut" cx="32" cy="32" r="24" fill="none" stroke="#ffc83d" stroke-width="12" stroke-dasharray="0 151" transform="rotate(-90 32 32)"/><text id="donutT" x="32" y="38" text-anchor="middle" font-size="15" font-weight="900" fill="#fff" font-family="Cairo">0%</text></svg>`},
   {t:'مؤشرات التنمية<br>والتطوير', svg:`<svg viewBox="0 0 64 64"><rect class="bar" x="8" y="40" width="10" height="16" fill="#22c3e6"/><rect class="bar" x="22" y="30" width="10" height="26" fill="#22c3e6"/><rect class="bar" x="36" y="20" width="10" height="36" fill="#22c3e6"/><rect class="bar" x="50" y="8" width="10" height="48" fill="#ffc83d"/><path d="M6 58h56" stroke="#fff" stroke-width="3"/></svg>`},
-  {t:'تطوير برامج<br>التأهيل', svg:`<svg viewBox="0 0 64 64" fill="none" stroke="#ffc83d" stroke-width="4" stroke-linecap="round"><path d="M32 6l6 12 13 2-9 9 2 13-12-6-12 6 2-13-9-9 13-2z"/><path d="M20 46l-6 14 10-4 4 8 4-14M44 46l6 14-10-4-4 8"/></svg>`},
 ];
-$('#s3icons').innerHTML = icons.map((ic,i)=>`<div class="icon" id="ic${i}" style="left:${1460-i*400}px;top:440px">${ic.svg}<div>${ic.t}</div></div>`).join('');
+$('#s3icons').innerHTML = icons.map((ic,i)=>`<div class="icon" id="ic${i}" style="left:${1330-i*540}px;top:160px;width:500px;height:300px;flex-direction:row;gap:26px">${ic.svg}<div>${ic.t}</div></div>`).join('');
 
 /* scene 4 gifts */
 function gift(c1,c2,w){return `<svg width="${w}" height="${w}" viewBox="0 0 100 100"><rect x="10" y="40" width="80" height="56" rx="6" fill="${c1}"/><rect x="4" y="28" width="92" height="18" rx="5" fill="${c2}"/><rect x="44" y="28" width="12" height="68" fill="#ffc83d"/><path d="M50 28c-10-22-34-18-26-4 4 6 26 4 26 4zM50 28c10-22 34-18 26-4-4 6-26 4-26 4z" fill="#ffc83d"/></svg>`}
-const gifts=[[220,560,'#e8455d','#ff6b80',300],[520,620,'#1f6fd1','#4b95ee',240],[120,330,'#7b5cff','#9d87ff',200],[600,330,'#18b38a','#3dd6ac',180],[400,170,'#f08a00','#ffb53a',150]];
+const gifts=[[200,470,'#e8692a','#f7941d',290],[520,520,'#2b3990','#3858a8',230],[110,250,'#3858a8','#4a8fe0',190],[590,250,'#f7941d','#ffb24a',170],[390,110,'#2b3990','#4a6fc0',140]];
 $('#s4gifts').innerHTML = gifts.map((g,i)=>`<div class="prize" id="g${i}" style="left:${g[0]}px;top:${g[1]}px">${gift(g[2],g[3],g[4])}</div>`).join('');
-const confColors=['#ffc83d','#22c3e6','#ff6b80','#7b5cff','#3dd6ac','#fff'];
+const confColors=['#f7941d','#3858a8','#e8692a','#2b3990','#4a8fe0','#ffb24a'];
 let rnd=7;const R=()=>(rnd=(rnd*16807)%2147483647)/2147483647;
 const confs=[];for(let i=0;i<90;i++){confs.push({x:R()*1920,d:R()*2,sp:300+R()*400,rot:R()*720,c:confColors[i%6],sw:R()*80});}
 $('#s4conf').innerHTML = confs.map((c,i)=>`<div class="conf" id="cf${i}" style="background:${c.c}"></div>`).join('');
@@ -218,7 +256,7 @@ function render(t){
 
   // S1
   let a=S[0][0], L=S[0][1]-a;
-  {const p=back(prog(t,a+.2,.8)); set($('#s1grad'),{y:lerp(500,0,p)+Math.sin(t*3)*6,s:1});
+  {const p=eo(prog(t,a+.1,1.1)); set($('#s1grad'),{x:lerp(-700,0,p),y:Math.abs(Math.sin(t*6))*-10*(1-p)+Math.sin(t*1.6)*5,r:Math.sin(t*1.2)*1.2}); set($('#s1glow'),{s:lerp(.6,1,eo(prog(t,a+.5,1)))+Math.sin(t*2)*.02,o:eo(prog(t,a+.5,1))});
    set($('#s1l1'),{x:lerp(-300,0,eo(prog(t,a+.6,.7))),o:eo(prog(t,a+.6,.7))});
    set($('#s1l2'),{x:lerp(-300,0,eo(prog(t,a+1.6,.7))),o:eo(prog(t,a+1.6,.7))});
    const bp=back(prog(t,a+1.2,.6)); set($('#s1bubble'),{s:bp,o:clamp(bp),r:Math.sin(t*4)*6});
@@ -233,31 +271,33 @@ function render(t){
   }
   // S3
   a=S[2][0]; L=S[2][1]-a;
-  {set($('#s3h'),{y:lerp(-60,0,eo(prog(t,a+.2,.6))),o:eo(prog(t,a+.2,.6))});
-   const path=$('#s3path'); path.style.opacity=eo(prog(t,a+.6,1)); path.setAttribute('stroke-dashoffset',-t*40);
-   const step=(L-2.5)/4;
-   icons.forEach((_,i)=>{const q=back(prog(t,a+1+i*step,.7));set($('#ic'+i),{y:lerp(120,0,clamp(q))+Math.sin(t*2+i)*6,s:lerp(.5,1,q),o:clamp(q*1.4)})});
-   const dp=eo(prog(t,a+1+step,1.6)); const pct=Math.round(dp*87);
+  {const gq=eo(prog(t,a+.3,1)); set($('#s3group'),{base:'translateX(-50%)',y:lerp(300,0,gq)+Math.sin(t*1.5)*4,o:gq});
+   icons.forEach((_,i)=>{const q=back(prog(t,a+1.2+i*1.6,.7));set($('#ic'+i),{y:lerp(-80,0,clamp(q))+Math.sin(t*2+i)*5,s:lerp(.5,1,q),o:clamp(q*1.4)})});
+   const dp=eo(prog(t,a+3,1.8)); const pct=Math.round(dp*87);
    $('#donut').setAttribute('stroke-dasharray',`${151*pct/100} 151`); $('#donutT').textContent=pct+'%';
-   document.querySelectorAll('#ic2 .bar').forEach((b,i)=>{const q=eo(prog(t,a+1+2*step+i*.15,.6));b.style.transform=`scaleY(${q})`;b.style.transformOrigin='center 56px';b.style.transformBox='view-box'});
+   document.querySelectorAll('#ic2 .bar').forEach((b,i)=>{const q=eo(prog(t,a+4.6+i*.15,.6));b.style.transform=`scaleY(${q})`;b.style.transformOrigin='center 56px';b.style.transformBox='view-box'});
   }
   // S4
   a=S[3][0];
-  {const n=Math.round(eo(prog(t,a+3.2,1.2))*30); $('#s4num').textContent=n;
-   set($('#s4big'),{s:back(prog(t,a+2.8,.7)),o:clamp(prog(t,a+2.8,.4))});
+  {const n=Math.round(eo(prog(t,a+3.8,1.2))*30); $('#s4num').textContent=n;
+   set($('#s4big'),{s:back(prog(t,a+3.4,.7)),o:clamp(prog(t,a+3.4,.4))});
    gifts.forEach((g,i)=>{const q=back(prog(t,a+.3+i*.18,.7));set($('#g'+i),{y:lerp(-700,0,clamp(q))+Math.sin(t*3+i)*10,r:Math.sin(t*2+i)*6,s:q>0?1:0})});
-   [['#s4c1',7.4],['#s4c2',10.0]].forEach(([id,d])=>{const q=back(prog(t,a+d,.6));set($(id),{s:lerp(.4,1,q),o:clamp(q)})});
+   [['#s4c1',8.0],['#s4c2',10.6]].forEach(([id,d])=>{const q=back(prog(t,a+d,.6));set($(id),{s:lerp(.4,1,q),o:clamp(q)})});
    confs.forEach((c,i)=>{const tt=t-(a+.6)-c.d;const el=$('#cf'+i);if(tt<0){el.style.opacity=0;return}
      el.style.opacity=1;el.style.left=(c.x+Math.sin(tt*3+c.sw)*40)+'px';el.style.top=(-40+tt*c.sp)%1180+'px';el.style.transform=`rotate(${c.rot+tt*300}deg)`});
   }
   // S5
   a=S[4][0];
   {const q=back(prog(t,a+.2,.8)); set($('#s5qr'),{s:lerp(.3,1,q),o:clamp(q),r:lerp(-12,0,clamp(q))});
-   const sl=(t-a)%2/2; $('#scanline').style.top=(90+Math.abs(Math.sin(sl*Math.PI))*500)+'px'; $('#scanline').style.opacity=t>a+1?.85:0;
+   const sl=(t-a)%2/2; $('#scanline').style.top=(70+Math.abs(Math.sin(sl*Math.PI))*430)+'px'; $('#scanline').style.opacity=t>a+1?.85:0;
    set($('#s5left'),{x:lerp(-200,0,eo(prog(t,a+.6,.8))),o:eo(prog(t,a+.6,.8))});
-   const pulse=1+Math.max(0,Math.sin((t-a)*4))*.06; set($('#s5btn'),{s:prog(t,a+1.2,.01)?pulse:0});
-   const dq=eo(prog(t,a+2.4,.7)); set($('#s5date'),{y:lerp(60,0,dq),o:dq});
+   const bq=back(prog(t,a+1.4,.6)); const pulse=1+Math.max(0,Math.sin((t-a)*4))*.06; set($('#s5btn'),{s:bq*pulse,o:clamp(bq)});
+   const hp=(t-a-2.2)%1.6; set($('#s5hand'),{x:hp>0?Math.min(1,hp/.5)*30:0,y:hp>0?-Math.min(1,hp/.5)*30+(hp>.5&&hp<.7?8:0):0,o:t>a+2.2?1:0});
+   const dq=back(prog(t,a+3.0,.7)); set($('#s5date'),{y:lerp(160,0,clamp(dq)),o:clamp(dq)});
   }
+  // bottom wave frame
+  {const w=(y0,amp,ph,sp)=>{const k=[0,480,960,1440,1920].map((x,i)=>y0+Math.sin(t*sp+ph+i*1.3)*amp);return `M0 ${k[0]} C 320 ${k[0]-40} 640 ${k[2]+30} 960 ${k[2]} S 1600 ${k[4]-50} 1920 ${k[4]} L1920 240 L0 240Z`};
+   $('#wO').setAttribute('d',w(70,10,0,.8));$('#wW').setAttribute('d',w(105,8,.6,.8));$('#wB').setAttribute('d',w(122,9,1.2,.8));}
   // subtitles
   const cur=CFG.subs.find(s=>t>=s[0]&&t<s[1]);
   const sub=$('#sub'); sub.textContent=cur?cur[2]:''; sub.style.opacity=cur?1:0;

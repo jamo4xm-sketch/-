@@ -1,5 +1,5 @@
 import numpy as np, wave, sys
-sr=44100; dur=61.0; bpm=110; beat=60/bpm
+sr=44100; dur=66.0; bpm=110; beat=60/bpm
 t=np.arange(int(sr*dur))/sr
 out=np.zeros_like(t)
 def note(f): return 440*2**((f-69)/12)
