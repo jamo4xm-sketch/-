@@ -94,7 +94,7 @@ body{color:var(--ink)}
     <svg class="abs" id="s1glow" style="left:170px;top:170px" width="660" height="700" viewBox="0 0 660 700"><defs><linearGradient id="hx" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#d9e6ff"/><stop offset="1" stop-color="#3b8fd9"/></linearGradient></defs>
 <path d="M330 30 L610 185 L610 505 L330 660 L50 505 L50 185Z" fill="#f7941d" transform="translate(0,24)"/>
 <path d="M330 30 L610 185 L610 505 L330 660 L50 505 L50 185Z" fill="url(#hx)" stroke="#fff" stroke-width="14" stroke-linejoin="round"/></svg>
-    <div class="abs" id="s1grad" style="left:360px;top:130px;width:300px;height:760px"><img src="grad.png" style="height:760px;display:block;filter:drop-shadow(0 16px 22px rgba(20,30,90,.35))"></div>
+    <div class="abs" id="s1grad" style="left:345px;top:130px;width:330px;height:760px"><img src="grad.png" style="height:760px;display:block;filter:drop-shadow(0 16px 22px rgba(20,30,90,.35))"></div>
     <div class="abs" id="s1q" style="left:880px;top:260px;width:940px">
       <div class="h1" id="s1l1">خريجنا الأعزاء..</div>
       <div class="h1" id="s1l2" style="margin-top:20px">هل حدثتم <span class="hl">بياناتكم</span><br>سابقاً؟</div>
@@ -371,7 +371,7 @@ function render(t){
   {const nq=back(prog(t,a+4.2,.7)); set($('#s4num'),{s:lerp(.5,1,clamp(nq,0,1.2)),o:clamp(nq)});
    set($('#s4big'),{s:back(prog(t,a+3.4,.7)),o:clamp(prog(t,a+3.4,.4))});
    gifts.forEach((g,i)=>{const q=back(prog(t,a+.3+i*.18,.7));set($('#g'+i),{y:lerp(-700,0,clamp(q))+Math.sin(t*3+i)*10,r:Math.sin(t*2+i)*6,s:q>0?1:0})});
-   [['#s4c1',7.3],['#s4c2',9.9]].forEach(([id,d])=>{const q=back(prog(t,a+d,.6));set($(id),{s:lerp(.4,1,q),o:clamp(q)})});
+   [['#s4c1',10.5],['#s4c2',13.4]].forEach(([id,d])=>{const q=back(prog(t,a+d,.6));set($(id),{s:lerp(.4,1,q),o:clamp(q)})});
    confs.forEach((c,i)=>{const tt=t-(a+.6)-c.d;const el=$('#cf'+i);if(tt<0){el.style.opacity=0;return}
      el.style.opacity=1;el.style.left=(c.x+Math.sin(tt*3+c.sw)*40)+'px';el.style.top=(-40+tt*c.sp)%1180+'px';el.style.transform=`rotate(${c.rot+tt*300}deg)`});
   }
