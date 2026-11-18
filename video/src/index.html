@@ -68,6 +68,14 @@ body{color:var(--ink)}
 #frame{position:absolute;left:0;bottom:0;width:1920px;height:240px;z-index:40;pointer-events:none}
 #frameTop{position:absolute;left:0;top:0;width:560px;height:170px;z-index:1;pointer-events:none}
 #footer{position:absolute;left:0;right:0;bottom:16px;z-index:45;display:flex;justify-content:center;align-items:center;gap:28px;color:#fff;font-weight:700}
+
+.stp{display:flex;align-items:center;gap:10px;font-size:20px;font-weight:700;color:#9aa1b8}
+.stp b{width:40px;height:40px;border-radius:50%;background:#e6e9f2;color:#6b7392;display:flex;align-items:center;justify-content:center;font-size:20px}
+.stp.on{color:#2b3990}.stp.on b{background:#f7941d;color:#fff}.stp.done b{background:#2e9d55;color:#fff}
+.stl{flex:1;height:4px;background:#e6e9f2;margin:0 16px;border-radius:2px;display:block;max-width:220px}.stl.on{background:#2e9d55}
+.fld label{display:block;font-size:18px;font-weight:700;color:#55607f;margin-bottom:6px}
+.inp{height:54px;border:2px solid #d5dae6;border-radius:12px;padding:0 18px;font-size:22px;font-weight:700;color:#1d2450;display:flex;align-items:center;background:#fafbfe}
+.inp.on{border-color:#3858a8;box-shadow:0 0 0 4px rgba(56,88,168,.15);background:#fff}
 </style>
 </head>
 <body>
@@ -86,34 +94,93 @@ body{color:var(--ink)}
     <svg class="abs" id="s1glow" style="left:170px;top:170px" width="660" height="700" viewBox="0 0 660 700"><defs><linearGradient id="hx" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#d9e6ff"/><stop offset="1" stop-color="#3b8fd9"/></linearGradient></defs>
 <path d="M330 30 L610 185 L610 505 L330 660 L50 505 L50 185Z" fill="#f7941d" transform="translate(0,24)"/>
 <path d="M330 30 L610 185 L610 505 L330 660 L50 505 L50 185Z" fill="url(#hx)" stroke="#fff" stroke-width="14" stroke-linejoin="round"/></svg>
-    <div class="abs" id="s1grad" style="left:360px;top:130px;width:300px;height:760px"><img src="grad.png" style="height:760px;display:block;filter:drop-shadow(0 16px 22px rgba(20,30,90,.35))"></div>
+    <div class="abs" id="s1grad" style="left:250px;top:140px;width:500px;height:740px"><img src="grad_utas.png" style="height:740px;display:block;filter:drop-shadow(0 16px 22px rgba(20,30,90,.35))"></div>
     <div class="abs" id="s1q" style="left:880px;top:260px;width:940px">
       <div class="h1" id="s1l1">خريجنا الأعزاء..</div>
       <div class="h1" id="s1l2" style="margin-top:20px">هل حدثتم <span class="hl">بياناتكم</span><br>سابقاً؟</div>
     </div>
-    <div class="abs" id="s1bubble" style="left:600px;top:150px"></div>
+    <div class="abs" id="s1phone" style="left:690px;top:330px;width:190px;height:360px;border-radius:30px;background:#1b1f3b;padding:12px;box-shadow:0 20px 40px rgba(20,30,90,.35)">
+      <div style="width:100%;height:100%;border-radius:20px;background:linear-gradient(180deg,#eef3ff,#fff);position:relative;overflow:hidden;direction:rtl">
+        <div style="height:34px;background:#2b3990;color:#fff;font-size:15px;font-weight:700;display:flex;align-items:center;justify-content:center">UTAS · عبري</div>
+        <div id="s1notif" style="margin:18px 10px;background:#fff;border-radius:14px;box-shadow:0 6px 16px rgba(43,57,144,.2);padding:10px 12px;border-right:5px solid #f7941d">
+          <div style="font-size:15px;font-weight:900;color:#2b3990">🔔 تحديث البيانات</div>
+          <div style="font-size:13px;font-weight:700;color:#55607f;line-height:1.5">حدّث بياناتك كخريج الآن</div>
+        </div>
+        <div id="s1pbtn" style="margin:0 14px;background:#f7941d;color:#fff;border-radius:12px;text-align:center;font-size:16px;font-weight:900;padding:8px 0">تحديث</div>
+      </div>
+    </div>
+    <div class="abs" id="s1bubble" style="left:640px;top:120px"></div>
   </div>
 
-  <!-- SCENE 2 : campaign announcement -->
+  <!-- SCENE 2 : realistic website -->
   <div class="scene" id="s2">
-    <div class="card" id="s2card" style="left:260px;top:175px;width:1400px;height:640px;overflow:hidden">
-      <div style="height:90px;background:var(--navy2);display:flex;align-items:center;padding:0 34px;gap:14px;direction:ltr">
-        <i style="width:22px;height:22px;border-radius:50%;background:#ff5f57;display:block"></i>
-        <i style="width:22px;height:22px;border-radius:50%;background:#febc2e;display:block"></i>
-        <i style="width:22px;height:22px;border-radius:50%;background:#28c840;display:block"></i>
-        <div style="margin-left:30px;flex:1;height:48px;border-radius:24px;background:rgba(255,255,255,.15);color:#cfe0ff;font-size:24px;line-height:48px;padding:0 26px;font-family:Cairo">pedstech.om/utas</div>
-      </div>
-      <div id="s2logo" style="position:absolute;top:130px;left:50%;transform:translateX(-50%)"></div>
-      <div class="abs" id="s2title" style="top:300px;left:80px;right:80px;color:var(--navy);text-align:center">
-        <div style="font-size:42px;font-weight:700;color:var(--blue)" id="s2k">إعلان</div>
-        <div style="font-size:66px;font-weight:900;line-height:1.35" id="s2t1">الحملة الإلكترونية لتحديث بيانات خريجي</div>
-        <div style="font-size:52px;font-weight:900;line-height:1.35;color:var(--blue)" id="s2t2">جامعة التقنية والعلوم التطبيقية بعبري</div>
-        <div style="font-size:42px;font-weight:700;color:#f08a00;margin-top:6px" id="s2t3">وتتبّع مساراتهم بعد التخرج</div>
+   <div class="abs" id="s2win" style="left:200px;top:165px;width:1520px;height:672px;border-radius:18px;background:#fff;overflow:hidden;box-shadow:0 30px 60px rgba(43,57,144,.28)">
+    <div style="height:58px;background:#e9ecf3;display:flex;align-items:center;padding:0 22px;gap:12px;direction:ltr;border-bottom:1px solid #d5dae6">
+      <i style="width:16px;height:16px;border-radius:50%;background:#ff5f57;display:block"></i><i style="width:16px;height:16px;border-radius:50%;background:#febc2e;display:block"></i><i style="width:16px;height:16px;border-radius:50%;background:#28c840;display:block"></i>
+      <div style="margin-left:24px;flex:1;height:38px;border-radius:19px;background:#fff;border:1px solid #d5dae6;display:flex;align-items:center;gap:10px;padding:0 18px;font-size:19px;color:#3b4466;font-family:Cairo">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="#2e9d55"><path d="M6 10V7a6 6 0 0 1 12 0v3h1a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V11a1 1 0 0 1 1-1zm2 0h8V7a4 4 0 0 0-8 0z"/></svg>
+        <span id="s2url"></span><span id="s2caret" style="width:2px;height:22px;background:#2b3990"></span>
       </div>
     </div>
-    <div class="abs" id="s2dept" style="display:none;left:50%;top:800px;transform:translateX(-50%);white-space:nowrap">
-      <span class="pill" style="font-size:30px;background:var(--navy)">مركز التدريب والتوجيه الوظيفي · قسم متابعة الخريجين</span>
+    <div id="s2load" style="height:4px;background:#f7941d;width:0"></div>
+    <div id="s2vp" style="position:absolute;top:62px;left:0;right:0;bottom:0;overflow:hidden;background:#f5f6fa;direction:rtl">
+     <div id="s2page" style="position:absolute;left:0;right:0;top:0">
+      <!-- header -->
+      <div style="height:84px;background:#fff;display:flex;align-items:center;padding:0 40px;gap:34px;border-bottom:3px solid #f7941d;box-shadow:0 4px 12px rgba(0,0,0,.05)">
+        <img src="logo.png" style="height:54px">
+        <div style="display:flex;gap:30px;font-size:20px;font-weight:700;color:#2b3990;margin-right:20px">
+          <span>الرئيسية</span><span>عن الجامعة</span><span id="s2nav" style="position:relative;padding:4px 10px;border-radius:8px">مركز التدريب والتوجيه الوظيفي</span><span>الخريجون</span><span>تواصل معنا</span>
+        </div>
+        <div style="margin-right:auto;display:flex;gap:12px;align-items:center">
+          <span style="font-size:17px;color:#55607f;font-weight:700">EN</span>
+          <span style="background:#2b3990;color:#fff;border-radius:10px;padding:6px 18px;font-size:18px;font-weight:700">تسجيل الدخول</span>
+        </div>
+      </div>
+      <!-- breadcrumb -->
+      <div id="s2crumb" style="height:42px;display:flex;align-items:center;padding:0 40px;font-size:17px;color:#6b7392;gap:8px">
+        <span>الرئيسية</span><span>›</span><span>مركز التدريب والتوجيه الوظيفي</span><span>›</span><b style="color:#e8692a">قسم متابعة الخريجين</b>
+      </div>
+      <!-- hero -->
+      <div style="margin:0 40px;height:400px;border-radius:20px;background:linear-gradient(120deg,#2b3990 0%,#3858a8 60%,#4a8fe0 100%);position:relative;overflow:hidden;color:#fff">
+        <div style="position:absolute;inset:0;background-image:radial-gradient(rgba(255,255,255,.12) 2px,transparent 2px);background-size:26px 26px"></div>
+        <div style="position:absolute;left:-60px;bottom:-80px;width:420px;height:420px;border-radius:50%;background:#f7941d;opacity:.9"></div>
+        <img src="group.png" style="position:absolute;left:30px;bottom:0;height:330px">
+        <div style="position:absolute;right:50px;top:40px;width:820px">
+          <span id="s2k" style="display:inline-block;background:#f7941d;border-radius:10px;padding:2px 20px;font-size:24px;font-weight:900">إعلان</span>
+          <div id="s2t1" style="font-size:44px;font-weight:900;line-height:1.35;margin-top:12px">الحملة الإلكترونية لتحديث بيانات خريجي</div>
+          <div id="s2t2" style="font-size:44px;font-weight:900;line-height:1.35;color:#ffd08a">جامعة التقنية والعلوم التطبيقية بعبري</div>
+          <div id="s2t3" style="font-size:32px;font-weight:700;margin-top:6px">وتتبّع مساراتهم بعد التخرج</div>
+          <span id="s2cta" style="display:inline-block;margin-top:26px;background:#fff;color:#2b3990;border-radius:14px;padding:10px 34px;font-size:26px;font-weight:900;box-shadow:0 8px 0 rgba(0,0,0,.15)">حدّث بياناتك الآن ←</span>
+        </div>
+      </div>
+      <!-- form section -->
+      <div style="margin:34px 40px 0;background:#fff;border-radius:20px;box-shadow:0 10px 30px rgba(43,57,144,.10);padding:28px 40px;height:560px;position:relative">
+        <div style="font-size:32px;font-weight:900;color:#2b3990">استمارة تحديث بيانات الخريجين</div>
+        <div style="display:flex;align-items:center;gap:0;margin:22px 0 26px">
+          <div class="stp" id="st0"><b>1</b><span>البيانات الشخصية</span></div><i class="stl" id="sl0"></i>
+          <div class="stp" id="st1"><b>2</b><span>البيانات الأكاديمية</span></div><i class="stl" id="sl1"></i>
+          <div class="stp" id="st2"><b>3</b><span>المسار المهني</span></div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px 40px">
+          <div class="fld"><label>الاسم الكامل</label><div class="inp" id="f0"></div></div>
+          <div class="fld"><label>الرقم الجامعي</label><div class="inp" id="f1"></div></div>
+          <div class="fld"><label>التخصص</label><div class="inp" id="f2"></div></div>
+          <div class="fld"><label>سنة التخرج</label><div class="inp" id="f3"></div></div>
+          <div class="fld"><label>جهة العمل الحالية</label><div class="inp" id="f4"></div></div>
+          <div class="fld"><label>المسمى الوظيفي</label><div class="inp" id="f5"></div></div>
+        </div>
+        <div style="margin-top:26px;display:flex;justify-content:flex-start"><span id="s2submit" style="background:#f7941d;color:#fff;border-radius:12px;padding:10px 46px;font-size:24px;font-weight:900;box-shadow:0 6px 0 #c4561a">إرسال وتحديث البيانات</span></div>
+      </div>
+     </div>
+     <div id="s2toast" style="position:absolute;left:50%;top:40%;transform:translate(-50%,-50%);background:#fff;border-radius:22px;box-shadow:0 30px 70px rgba(20,30,90,.35);padding:30px 60px;text-align:center;opacity:0">
+       <svg width="90" height="90" viewBox="0 0 24 24"><circle cx="12" cy="12" r="11" fill="#2e9d55"/><path d="M7 12.5l3.2 3.2L17 9" stroke="#fff" stroke-width="2.4" fill="none" stroke-linecap="round"/></svg>
+       <div style="font-size:34px;font-weight:900;color:#2b3990;margin-top:8px">تم تحديث بياناتك بنجاح</div>
+       <div style="font-size:22px;color:#6b7392;font-weight:700">شكراً لتواصلك مع جامعتك</div>
+     </div>
+     <svg id="s2cur" class="abs" width="38" height="38" viewBox="0 0 24 24" style="left:0;top:0;z-index:9"><path d="M4 2l15 9-6.5 1.5L16 20l-3 1.5-3.5-7.5L4 18z" fill="#111" stroke="#fff" stroke-width="1.4"/></svg>
+     <div id="s2click" class="abs" style="width:50px;height:50px;border-radius:50%;border:4px solid #f7941d;opacity:0;z-index:8"></div>
     </div>
+   </div>
   </div>
 
   <!-- SCENE 3 : goals -->
@@ -201,7 +268,6 @@ const logoHTML = true
      <div class="lt" style="margin-right:14px"><b>جامعة التقنية والعلوم التطبيقية</b><span>عبري · University of Technology and Applied Sciences</span></div>`;
 $('#logoBox').innerHTML = logoHTML;
 $('#logoBox').style.direction='rtl';
-$('#s2logo').innerHTML = `<div style="display:flex;align-items:center;gap:10px;direction:rtl;height:150px">${true?'<img src="logo.png" style="height:130px">':logoHTML.replace('width="90" height="90"','width="140" height="140"').replace('font-size:24px','font-size:34px')}</div>`;
 
 /* ---------- avatar (flat cartoon graduate) ---------- */
 function avatar({skin='#f2c9a0',gown='#123a80',accent='#ffc83d',hijab=null,phone=true,scale=1}={}){
@@ -257,18 +323,40 @@ function render(t){
 
   // S1
   let a=S[0][0], L=S[0][1]-a;
-  {const p=eo(prog(t,a+.1,1.1)); set($('#s1grad'),{x:lerp(-700,0,p),y:Math.abs(Math.sin(t*6))*-10*(1-p)+Math.sin(t*1.6)*5,r:Math.sin(t*1.2)*1.2}); set($('#s1glow'),{s:lerp(.6,1,eo(prog(t,a+.5,1)))+Math.sin(t*2)*.02,o:eo(prog(t,a+.5,1))});
+  {const p=eo(prog(t,a+.1,1.1)); set($('#s1grad'),{x:lerp(-700,0,p),y:Math.abs(Math.sin(t*6))*-10*(1-p)+Math.sin(t*1.6)*5,r:Math.sin(t*1.2)*1.2}); {const pq=back(prog(t,a+1.0,.7)); set($('#s1phone'),{y:lerp(160,0,clamp(pq))+Math.sin(t*2.2)*8,r:lerp(25,6,clamp(pq))+Math.sin(t*1.7)*1.5,o:clamp(pq)}); const nq=back(prog(t,a+1.8,.5)); set($('#s1notif'),{x:lerp(-180,0,clamp(nq)),o:clamp(nq)}); set($('#s1pbtn'),{s:1+Math.max(0,Math.sin(t*5))*.06});}
+   set($('#s1glow'),{s:lerp(.6,1,eo(prog(t,a+.5,1)))+Math.sin(t*2)*.02,o:eo(prog(t,a+.5,1))});
    set($('#s1l1'),{x:lerp(-300,0,eo(prog(t,a+.6,.7))),o:eo(prog(t,a+.6,.7))});
    set($('#s1l2'),{x:lerp(-300,0,eo(prog(t,a+1.6,.7))),o:eo(prog(t,a+1.6,.7))});
    const bp=back(prog(t,a+1.2,.6)); set($('#s1bubble'),{s:bp,o:clamp(bp),r:Math.sin(t*4)*6});
    const ph=document.querySelector('#s1grad .phone'); if(ph) ph.setAttribute('transform',`rotate(${Math.sin(t*5)*4} 180 320)`);
   }
-  // S2
+  // S2  (scene 6.5–24): browser opens, URL types, page loads, hero, nav highlight, click CTA, scroll to form, fill, submit
   a=S[1][0];
-  {const p=back(prog(t,a+.2,.8)); set($('#s2card'),{s:lerp(.6,1,p),o:clamp(p*1.5),y:lerp(200,0,eo(prog(t,a+.2,.8)))});
-   set($('#s2logo'),{base:'translateX(-50%)',s:back(prog(t,a+.9,.6)),o:clamp(prog(t,a+.9,.3))});
-   ['#s2k','#s2t1','#s2t2','#s2t3'].forEach((id,i)=>{const q=eo(prog(t,a+1.6+i*.6,.6));set($(id),{y:lerp(40,0,q),o:q})});
-   const q=eo(prog(t,a+4.2,.6)); set($('#s2dept'),{base:'translateX(-50%)',y:lerp(60,0,q),o:q});
+  {const r=t-a;
+   const wq=back(prog(t,a+.1,.7)); set($('#s2win'),{s:lerp(.7,1,clamp(wq)),o:clamp(wq*1.5),y:lerp(120,0,eo(prog(t,a+.1,.7)))});
+   const url='pedstech.om/utas/index.php?s=c8fdda37'; const uq=clamp((r-.6)/1.1); $('#s2url').textContent=url.slice(0,Math.round(uq*url.length));
+   $('#s2caret').style.opacity=(r<1.9 && Math.floor(r*3)%2==0)?1:0;
+   $('#s2load').style.width=(clamp((r-1.8)/.6)*100)+'%'; $('#s2load').style.opacity=r<2.6?1:0;
+   const pageOn=clamp((r-2.3)/.4); $('#s2page').style.opacity=pageOn;
+   ['#s2k','#s2t1','#s2t2','#s2t3','#s2cta'].forEach((id,i)=>{const q=eo(prog(t,a+2.6+i*.45,.5));set($(id),{x:lerp(-60,0,q),o:q})});
+   // nav highlight while VO says the centre (abs 11.2–16.6 => r 4.7–10.1)
+   const nh=clamp((r-4.7)/.4)*clamp((10.1-r)/.4); const nav=$('#s2nav'); nav.style.background=`rgba(247,148,29,${.18*nh})`; nav.style.boxShadow=`inset 0 -4px 0 rgba(247,148,29,${nh})`;
+   const ch=clamp((r-7.9)/.4)*clamp((10.4-r)/.4); $('#s2crumb').style.transform=`scale(${1+ch*.0})`; $('#s2crumb').lastElementChild.style.background=`rgba(247,148,29,${.18*ch})`;
+   // cursor path keyframes [time, x, y] in viewport coords
+   const K=[[0,1300,560],[3.5,1300,560],[5.2,880,40],[8.6,880,40],[9.6,330,360],[10.2,330,360],[10.25,330,360],[12.6,1050,310],[15.6,640,420],[16.4,300,680],[17.5,300,680]];
+   let cx=K[0][1],cy=K[0][2]; for(let i=0;i<K.length-1;i++){if(r>=K[i][0]&&r<=K[i+1][0]){const f=eio((r-K[i][0])/(K[i+1][0]-K[i][0]));cx=lerp(K[i][1],K[i+1][1],f);cy=lerp(K[i][2],K[i+1][2],f);} if(r>K[K.length-1][0]){cx=K[K.length-1][1];cy=K[K.length-1][2];}}
+   const cur=$('#s2cur'); cur.style.left=cx+'px'; cur.style.top=cy+'px'; cur.style.opacity=r>2.8?1:0;
+   const clk=[10.2,16.4]; const ce=$('#s2click'); let cv=0; clk.forEach(c=>{const d=r-c; if(d>0&&d<.5){cv=1-d/.5; ce.style.left=(cx-20)+'px'; ce.style.top=(cy-20)+'px'; ce.style.transform=`scale(${.4+d*2.4})`;}}); ce.style.opacity=cv;
+   const ctaPress=(r>10.15&&r<10.4)?.94:1; $('#s2cta').style.transform+=` scale(${ctaPress})`;
+   // scroll to form after CTA click
+   const sc=eio(prog(t,a+10.4,1.1)); $('#s2page').style.transform=`translateY(${-520*sc}px)`;
+   // steps + typing
+   const vals=['سالم بن خالد الهنائي','26S1234','تقنية المعلومات','2024','القطاع الخاص – مسقط','مطوّر برمجيات'];
+   const T=[[11.6,1.0],[12.7,.6],[13.4,.8],[14.3,.4],[14.8,.8],[15.7,.6]];
+   vals.forEach((v,i)=>{const q=clamp((r-T[i][0])/T[i][1]); const el=$('#f'+i); el.textContent=v.slice(0,Math.round(q*v.length)); el.classList.toggle('on',q>0&&q<1);});
+   const step=r<13.3?0:(r<14.7?1:2); for(let i=0;i<3;i++){const e=$('#st'+i); e.classList.toggle('on',i===step); e.classList.toggle('done',i<step);} for(let i=0;i<2;i++) $('#sl'+i).classList.toggle('on',i<step);
+   const sp=(r>16.35&&r<16.6)?.94:1; $('#s2submit').style.transform=`scale(${sp})`;
+   const tq=back(prog(t,a+16.6,.5)); const toast=$('#s2toast'); toast.style.opacity=clamp(tq); toast.style.transform=`translate(-50%,-50%) scale(${lerp(.6,1,clamp(tq))})`;
   }
   // S3
   a=S[2][0]; L=S[2][1]-a;
