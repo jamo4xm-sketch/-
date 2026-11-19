@@ -371,7 +371,7 @@ function render(t){
   {const nq=back(prog(t,a+4.2,.7)); set($('#s4num'),{s:lerp(.5,1,clamp(nq,0,1.2)),o:clamp(nq)});
    set($('#s4big'),{s:back(prog(t,a+3.4,.7)),o:clamp(prog(t,a+3.4,.4))});
    gifts.forEach((g,i)=>{const q=back(prog(t,a+.3+i*.18,.7));set($('#g'+i),{y:lerp(-700,0,clamp(q))+Math.sin(t*3+i)*10,r:Math.sin(t*2+i)*6,s:q>0?1:0})});
-   [['#s4c1',10.5],['#s4c2',13.4]].forEach(([id,d])=>{const q=back(prog(t,a+d,.6));set($(id),{s:lerp(.4,1,q),o:clamp(q)})});
+   [['#s4c1',10.1],['#s4c2',13.3]].forEach(([id,d])=>{const q=back(prog(t,a+d,.6));set($(id),{s:lerp(.4,1,q),o:clamp(q)})});
    confs.forEach((c,i)=>{const tt=t-(a+.6)-c.d;const el=$('#cf'+i);if(tt<0){el.style.opacity=0;return}
      el.style.opacity=1;el.style.left=(c.x+Math.sin(tt*3+c.sw)*40)+'px';el.style.top=(-40+tt*c.sp)%1180+'px';el.style.transform=`rotate(${c.rot+tt*300}deg)`});
   }
