@@ -188,28 +188,29 @@ def build_mesh(base, white, red):
 
 
 def preview(base, white, red, path):
+    """Top-view render: each colour layer rasterised as its own mask (holes respected), then composited."""
     b = base.bounds
     s = 24
     W, H = int((b[2] - b[0] + 4) * s), int((b[3] - b[1] + 4) * s)
-    img = Image.new("RGB", (W, H), (205, 214, 224))
-    d = ImageDraw.Draw(img)
     tf = lambda xy: [((x - b[0] + 2) * s, (b[3] + 2 - y) * s) for x, y in xy]
 
-    def draw(g, col, shadow=None):
-        for p in sorted(getattr(g, "geoms", [g]), key=lambda q: -q.area):  # big shapes (frames) first
+    def mask(g, dx=0, dy=0):
+        m = np.zeros((H, W), np.uint8)
+        for p in getattr(g, "geoms", [g]):
             if p.is_empty:
                 continue
-            if shadow:
-                d.polygon([(x + 3, y + 4) for x, y in tf(p.exterior.coords)], fill=shadow)
-            d.polygon(tf(p.exterior.coords), fill=col)
+            one = Image.new("L", (W, H), 0)
+            d = ImageDraw.Draw(one)
+            d.polygon([(x + dx, y + dy) for x, y in tf(p.exterior.coords)], fill=255)
             for i in p.interiors:
-                d.polygon(tf(i.coords), fill=(26, 26, 26) if col != (26, 26, 26) else (205, 214, 224))
-    draw(base, (26, 26, 26), shadow=(150, 158, 168))
-    for p in getattr(base, "geoms", [base]):
-        for i in p.interiors:
-            d.polygon(tf(i.coords), fill=(205, 214, 224))
-    draw(white, (245, 245, 245))
-    draw(red, (200, 16, 46))
+                d.polygon([(x + dx, y + dy) for x, y in tf(i.coords)], fill=0)
+            m = np.maximum(m, np.array(one))
+        return Image.fromarray(m)
+    img = Image.new("RGB", (W, H), (205, 214, 224))
+    img.paste((150, 158, 168), (0, 0), mask(base, 3, 4))
+    img.paste((26, 26, 26), (0, 0), mask(base))
+    img.paste((245, 245, 245), (0, 0), mask(white))
+    img.paste((200, 16, 46), (0, 0), mask(red))
     img.save(path)
 
 
