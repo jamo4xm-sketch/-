@@ -19,6 +19,7 @@ KUFI, LATIN = U.KUFI, U.LATIN
 # closest free fonts to the reference keychain: rounded bold Arabic + bouncy Latin script
 AR_ROUND = "/usr/share/fonts/truetype/kacst-one/KacstOne-Bold.ttf"
 SCRIPT = "/usr/share/fonts/opentype/dancingscript/DancingScript-Bold.otf"
+RUQAA = os.path.join(HERE, "fonts", "ArefRuqaa-Bold.ttf")   # OFL, github.com/google/fonts
 EMPTY = Polygon()
 
 
@@ -39,20 +40,39 @@ def name_keychain(ar, en):
     return base, txt, EMPTY          # white outline, coloured letters
 
 
+def chaikin(pts, n=4, closed=True):
+    """Smooth a polyline into a curve (Chaikin corner cutting)."""
+    p = np.asarray(pts, float)
+    for _ in range(n):
+        q = np.roll(p, -1, axis=0) if closed else p[1:]
+        a = p if closed else p[:-1]
+        new = np.empty((len(a) * 2, 2))
+        new[0::2] = 0.75 * a + 0.25 * q
+        new[1::2] = 0.25 * a + 0.75 * q
+        p = new if closed else np.vstack([pts[0], new, pts[-1]])
+    return p
+
+
 def burqa():
-    half = [(0, 16.8), (12, 17.4), (23.6, 18.8), (25.6, 17.0), (25.2, 4), (24.6, -3.2),
-            (21.5, -4.6), (16.5, -6.2), (10.5, -8.6), (5.0, -12.2), (0, -17.5)]
+    """Emirati burqa (batoola): forehead band, curved eye openings either side of the 'seif'
+    (nose stick), concave cheek pieces flaring out, pointed lip piece.
+    Black burqa, thin white edge trim (like the stitched edge), 'إماراتية' across the middle."""
+    half = [(0, 20.0), (8, 20.0), (18, 20.4), (26.5, 21.2), (29.2, 20.4), (29.0, 15.5), (28.0, 9.5),
+            (27.6, 3.5), (28.4, -1.2), (29.2, -3.4), (26.0, -4.0), (21.5, -5.6), (16.5, -8.0),
+            (11.5, -11.4), (7.2, -15.2), (3.6, -19.0), (1.2, -22.0), (0, -23.4)]
     pts = half + [(-x, y) for x, y in reversed(half[1:-1])]
-    shape = Polygon(pts).buffer(0.6, resolution=16).buffer(-0.6, resolution=16)
-    eyes = [U.rounded_rect(18.6, 13.0, 2.4, s * 12.0, 7.0) for s in (-1, 1)]
-    frame = shape.difference(unary_union(eyes))
-    txt = affinity.rotate(U.text_shape("إماراتية", KUFI, 9, 0, 0, min_stroke=0.3, max_width=23), 18)
-    txt = affinity.translate(txt, -11.0, 3.2)
-    patch = outline(txt, 1.4)
-    ring, hole = U.ring_tab(0, 19.2)
-    base = unary_union([frame, patch, ring]).difference(hole)
-    heart = U.heart(4.2, 13.5, -4.6)
-    return base, unary_union([txt, heart]), heart   # black burqa, white text, red heart
+    shape = Polygon(chaikin(pts, 3)).buffer(0)
+    eye_r = [(2.0, 15.4), (8.0, 16.4), (15.0, 16.9), (21.5, 16.4), (25.2, 15.0), (25.6, 10.5), (25.0, 6.0),
+             (22.0, 4.6), (16.5, 3.4), (10.5, 1.6), (5.6, -0.8), (2.8, -2.8)]
+    eye_r = Polygon(chaikin(eye_r, 3)).buffer(0)
+    eye_l = affinity.scale(eye_r, -1, 1, origin=(0, 0))
+    eyes = unary_union([eye_l, eye_r])
+    ring, hole = U.ring_tab(0, 22.4)
+    base = unary_union([shape.difference(eyes), ring]).difference(hole)
+    txt = U.text_shape("إماراتية", RUQAA, 8.2, 0, -8.6, max_width=23)
+    trim = shape.buffer(-1.0).difference(shape.buffer(-1.8)).difference(txt.buffer(1.0))
+    white = unary_union([trim, txt])
+    return base, white, EMPTY          # black burqa, white trim + text
 
 
 def fiftyfive_3d():
@@ -67,23 +87,47 @@ def fiftyfive_3d():
     return base, side, face.buffer(-0.05)      # black outline, red depth, white face
 
 
+def stencil_shapes(height_mm, cx, bottom_y):
+    """Sheikh Zayed stencil (src/zayed_stencil.png: 128 = black, 255 = white) -> (silhouette, white) in mm."""
+    from PIL import Image
+    import cv2
+    a = np.array(Image.open(os.path.join(HERE, "src", "zayed_stencil.png")))
+    ys, xs = np.nonzero(a)
+    a = a[ys.min():ys.max() + 1, xs.min():xs.max() + 1]
+    sc = height_mm / a.shape[0]
+    pad = lambda m: cv2.copyMakeBorder(m.astype(np.uint8), 4, 4, 4, 4, cv2.BORDER_CONSTANT, value=0)
+    out = []
+    for m in (a > 0, a == 255):
+        g = U.trace(pad(m))
+        g = affinity.scale(affinity.translate(g, -4, -4), sc, -sc, origin=(0, 0))
+        out.append(g)
+    sil, white = out
+    b = sil.bounds
+    dx, dy = cx - (b[0] + b[2]) / 2, bottom_y - b[1]
+    return [affinity.translate(g, dx, dy).simplify(0.03) for g in (sil, white)]
+
+
 def date_plate():
-    W, H = 56, 30
-    plate = U.rounded_rect(W, H, 3)
-    ring, hole = U.ring_tab(W / 2 + 1.6, 0)
-    base = unary_union([plate, ring]).difference(hole)
-    frame = plate.buffer(-1.2).difference(plate.buffer(-2.3))
-    px0, px1 = -W / 2 + 2.3, -W / 2 + 19.5
-    panel = box(px0, -H / 2 + 2.3, px1, H / 2 - 2.3)
-    panel_txt = unary_union([U.text_shape("٥٥", KUFI, 9.5, (px0 + px1) / 2, 3.2, min_stroke=0.3, max_width=12),
-                             U.heart(5.0, (px0 + px1) / 2, -7.2)])
-    cx = (px1 + W / 2 - 2.3) / 2
-    divider = box(px1 + 1.2, -0.45, W / 2 - 3.4, 0.45)
-    top = U.text_shape("٢ ديسمبر", KUFI, 7.4, cx, 6.6, min_stroke=0.3, max_width=30)
-    bottom = U.text_shape("١٩٧١", KUFI, 8.4, cx, -6.6, min_stroke=0.3, max_width=26)
-    red = panel.difference(panel_txt.buffer(0.15))
-    black = unary_union([frame, divider, top, bottom, red])
-    return base, black, red          # white plate, black frame/text, red panel (white shows through the cut-outs)
+    """'2 December 1971' plate with Sheikh Zayed in the red panel (layout after the reference sticker)."""
+    W, H = 90, 56
+    plate = U.rounded_rect(W, H, 4)
+    frame = plate.buffer(-2.2).difference(plate.buffer(-3.2))
+    inner = plate.buffer(-3.2)
+    xi0, yi0, xi1, yi1 = inner.bounds
+    split = xi0 + 34.0
+    panel = inner.intersection(box(xi0 - 1, yi0 - 1, split, yi1 + 1))
+    pcx = (xi0 + split) / 2
+    panel_txt = U.text_shape("١٠٤٠م", RUQAA, 8.5, pcx + 2.0, yi1 - 6.6, max_width=24)
+    sil, sil_white = stencil_shapes(37.5, pcx - 1.5, yi0)
+    sil, sil_white = sil.intersection(panel), sil_white.intersection(panel)
+    rcx = (split + xi1) / 2
+    divider = box(split, -2.2, xi1 + 0.2, -1.2)
+    top = U.text_shape("٢ ديسمبر", RUQAA, 15, rcx, 11.6, max_width=40)
+    bottom = U.text_shape("١٩٧١", RUQAA, 17, rcx, -13.4, max_width=36)
+    holes = unary_union([panel_txt, sil_white])
+    black = unary_union([frame, divider, top, bottom, panel.difference(holes)])
+    red = panel.difference(unary_union([panel_txt, sil]))
+    return plate, black, red          # white plate, black lines/text/portrait, red panel
 
 
 DESIGNS = {
@@ -91,9 +135,9 @@ DESIGNS = {
     "02_emaratiya_name": (lambda: name_keychain("إماراتية", "Emaratiya"), ("white", "red")),
     "01b_emarati_name_black": (lambda: name_keychain("إماراتي", "Emarati"), ("white", "black")),
     "02b_emaratiya_name_black": (lambda: name_keychain("إماراتية", "Emaratiya"), ("white", "black")),
-    "03_burqa_emaratiya": (burqa, ("black", "white", "red")),
+    "03_burqa_emaratiya": (burqa, ("black", "white")),
     "04_55_3d": (fiftyfive_3d, ("black", "red", "white")),
-    "05_date_plate_1971": (date_plate, ("white", "black", "red")),
+    "05_date_plate_zayed_1971": (date_plate, ("white", "black", "red")),
 }
 
 if __name__ == "__main__":
