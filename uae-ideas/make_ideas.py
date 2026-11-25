@@ -20,6 +20,7 @@ KUFI, LATIN = U.KUFI, U.LATIN
 AR_ROUND = "/usr/share/fonts/truetype/kacst-one/KacstOne-Bold.ttf"
 SCRIPT = "/usr/share/fonts/opentype/dancingscript/DancingScript-Bold.otf"
 RUQAA = os.path.join(HERE, "fonts", "ArefRuqaa-Bold.ttf")   # OFL, github.com/google/fonts
+RUQAA_REG = os.path.join(HERE, "fonts", "ArefRuqaa-Regular.ttf")  # lighter weight, closer to the reference sticker
 EMPTY = Polygon()
 
 
@@ -54,25 +55,27 @@ def chaikin(pts, n=4, closed=True):
 
 
 def burqa():
-    """Emirati burqa (batoola): forehead band, curved eye openings either side of the 'seif'
-    (nose stick), concave cheek pieces flaring out, pointed lip piece.
-    Black burqa, thin white edge trim (like the stitched edge), 'إماراتية' across the middle."""
-    half = [(0, 20.0), (8, 20.0), (18, 20.4), (26.5, 21.2), (29.2, 20.4), (29.0, 15.5), (28.0, 9.5),
-            (27.6, 3.5), (28.4, -1.2), (29.2, -3.4), (26.0, -4.0), (21.5, -5.6), (16.5, -8.0),
-            (11.5, -11.4), (7.2, -15.2), (3.6, -19.0), (1.2, -22.0), (0, -23.4)]
-    pts = half + [(-x, y) for x, y in reversed(half[1:-1])]
-    shape = Polygon(chaikin(pts, 3)).buffer(0)
-    eye_r = [(2.0, 15.4), (8.0, 16.4), (15.0, 16.9), (21.5, 16.4), (25.2, 15.0), (25.6, 10.5), (25.0, 6.0),
-             (22.0, 4.6), (16.5, 3.4), (10.5, 1.6), (5.6, -0.8), (2.8, -2.8)]
-    eye_r = Polygon(chaikin(eye_r, 3)).buffer(0)
-    eye_l = affinity.scale(eye_r, -1, 1, origin=(0, 0))
-    eyes = unary_union([eye_l, eye_r])
-    ring, hole = U.ring_tab(0, 22.4)
-    base = unary_union([shape.difference(eyes), ring]).difference(hole)
-    txt = U.text_shape("إماراتية", RUQAA, 8.2, 0, -8.6, max_width=23)
-    trim = shape.buffer(-1.0).difference(shape.buffer(-1.8)).difference(txt.buffer(1.0))
-    white = unary_union([trim, txt])
-    return base, white, EMPTY          # black burqa, white trim + text
+    """Emirati burqa, proportions taken from the reference keychain (width : height about 1.6 : 1):
+    thick straight forehead band, thin side frames, two big rectangular eye windows split by a thin
+    'seif', and a big lower piece whose bottom edge sags down to a point in the middle.
+    Black burqa, 'إماراتية' in white across the middle of the lower piece."""
+    W, top, side_bot, mid_bot = 56.0, 17.0, -7.5, -18.5
+    hw = W / 2
+    # bottom edge: quadratic curve from the side corner down to the centre point, sagging below the chord
+    t = np.linspace(0, 1, 40)
+    p0, c, p1 = np.array([hw, side_bot]), np.array([hw * 0.45, mid_bot + 1.2]), np.array([0, mid_bot])
+    curve = ((1 - t) ** 2)[:, None] * p0 + (2 * (1 - t) * t)[:, None] * c + (t ** 2)[:, None] * p1
+    right = [(0, top), (hw - 1.0, top + 0.6), (hw, top - 0.4)] + [tuple(q) for q in curve[:-1]]
+    left = [(-x, y) for x, y in reversed(right[1:])]
+    shape = Polygon(right + [(0, mid_bot)] + left).buffer(0.8, resolution=16).buffer(-0.8, resolution=16)
+    band, frame_w, seif = 4.2, 2.2, 0.9                  # forehead band, side frames, half seif width
+    win_r = U.rounded_rect(hw - frame_w - seif, (top - band) - (-4.2), 1.6,
+                           (seif + hw - frame_w) / 2, ((top - band) + (-4.2)) / 2)
+    windows = unary_union([win_r, affinity.scale(win_r, -1, 1, origin=(0, 0))])
+    ring, hole = U.ring_tab(0, top + 2.2)
+    base = unary_union([shape.difference(windows), ring]).difference(hole)
+    txt = U.text_shape("إماراتية", RUQAA, 8.0, 0, -9.8, max_width=26)
+    return base, txt, EMPTY          # black burqa, white text
 
 
 def fiftyfive_3d():
@@ -117,13 +120,13 @@ def date_plate():
     split = xi0 + 34.0
     panel = inner.intersection(box(xi0 - 1, yi0 - 1, split, yi1 + 1))
     pcx = (xi0 + split) / 2
-    panel_txt = U.text_shape("١٠٤٠م", RUQAA, 8.5, pcx + 2.0, yi1 - 6.6, max_width=24)
+    panel_txt = U.text_shape("١٠٤٠م", RUQAA_REG, 8.5, pcx + 2.0, yi1 - 6.6, max_width=24)
     sil, sil_white = stencil_shapes(37.5, pcx - 1.5, yi0)
     sil, sil_white = sil.intersection(panel), sil_white.intersection(panel)
     rcx = (split + xi1) / 2
     divider = box(split, -2.2, xi1 + 0.2, -1.2)
-    top = U.text_shape("٢ ديسمبر", RUQAA, 15, rcx, 11.6, max_width=40)
-    bottom = U.text_shape("١٩٧١", RUQAA, 17, rcx, -13.4, max_width=36)
+    top = U.text_shape("٢ ديسمبر", RUQAA_REG, 15, rcx, 11.6, max_width=40)
+    bottom = U.text_shape("١٩٧١", RUQAA_REG, 17, rcx, -13.4, max_width=36)
     holes = unary_union([panel_txt, sil_white])
     black = unary_union([frame, divider, top, bottom, panel.difference(holes)])
     red = panel.difference(unary_union([panel_txt, sil]))
