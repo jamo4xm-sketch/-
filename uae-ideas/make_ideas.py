@@ -16,6 +16,9 @@ sys.path.insert(0, os.path.join(HERE, "..", "uae-national-day"))
 import make_uae as U  # noqa: E402
 
 KUFI, LATIN = U.KUFI, U.LATIN
+# closest free fonts to the reference keychain: rounded bold Arabic + bouncy Latin script
+AR_ROUND = "/usr/share/fonts/truetype/kacst-one/KacstOne-Bold.ttf"
+SCRIPT = "/usr/share/fonts/opentype/dancingscript/DancingScript-Bold.otf"
 EMPTY = Polygon()
 
 
@@ -26,14 +29,14 @@ def outline(g, off=1.8):
 
 
 def name_keychain(ar, en):
-    a = U.text_shape(ar, KUFI, 15, 0, 6, min_stroke=0.3, max_width=46)
-    e = U.text_shape(en, LATIN, 7.5, 0, -8.5, max_width=44)
+    a = U.text_shape(ar, AR_ROUND, 19, 0, 7.5, min_stroke=0.3, max_width=48)
+    e = U.text_shape(en, SCRIPT, 12, 0.5, -8.0, max_width=46).buffer(0.12)   # thicken script hairlines a little
     txt = unary_union([a, e])
     base = outline(txt, 1.8)
     b = base.bounds
-    ring, hole = U.ring_tab(b[2] - 1.0, b[3] - 2.5)
+    ring, hole = U.ring_tab(b[2] - 0.8, b[3] - 1.2)
     base = unary_union([base, ring]).difference(hole)
-    return base, txt, EMPTY          # white outline, red letters
+    return base, txt, EMPTY          # white outline, coloured letters
 
 
 def burqa():
@@ -86,6 +89,8 @@ def date_plate():
 DESIGNS = {
     "01_emarati_name": (lambda: name_keychain("إماراتي", "Emarati"), ("white", "red")),
     "02_emaratiya_name": (lambda: name_keychain("إماراتية", "Emaratiya"), ("white", "red")),
+    "01b_emarati_name_black": (lambda: name_keychain("إماراتي", "Emarati"), ("white", "black")),
+    "02b_emaratiya_name_black": (lambda: name_keychain("إماراتية", "Emaratiya"), ("white", "black")),
     "03_burqa_emaratiya": (burqa, ("black", "white", "red")),
     "04_55_3d": (fiftyfive_3d, ("black", "red", "white")),
     "05_date_plate_1971": (date_plate, ("white", "black", "red")),

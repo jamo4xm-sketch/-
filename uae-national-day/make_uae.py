@@ -47,7 +47,7 @@ def heart(width, cx=0, cy=0):
 
 def text_shape(txt, font, height, cx=0, cy=0, min_stroke=0.0, max_width=None):
     """Render text with Pillow (raqm handles Arabic shaping + RTL) and trace it to polygons, scaled to `height` mm."""
-    eng = ImageFont.Layout.RAQM if font == KUFI else ImageFont.Layout.BASIC
+    eng = ImageFont.Layout.RAQM  # raqm does Arabic shaping + right-to-left; fine for Latin too
     f = ImageFont.truetype(font, 400, layout_engine=eng)
     l, t, r, b = f.getbbox(txt)
     img = Image.new("L", (r - l + 40, b - t + 40), 0)
