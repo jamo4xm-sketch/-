@@ -23,6 +23,7 @@ from make_bambu_3mf import load_profiles, project_config, mesh_xml, APP_VERSION 
 PX = 20  # raster resolution, px per mm
 Z_BLACK, Z_WHITE, Z_RED = 1.6, 2.4, 3.0
 COLOURS = ["#000000", "#FFFFFF", "#C8102E"]
+SLOT = {"black": 1, "white": 2, "red": 3}   # AMS slots - same for every design
 KUFI = "/usr/share/fonts/truetype/noto/NotoKufiArabic-Bold.ttf"
 LATIN = "/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf"
 RING_OUT, RING_HOLE = 7.4, 3.6
@@ -182,12 +183,16 @@ def extrude(g, h):
 def build_mesh(base, white, red):
     white = white.intersection(base.buffer(-0.6))
     red = red.intersection(base.buffer(-0.6))
-    m = trimesh.boolean.union([extrude(base, Z_BLACK), extrude(white, Z_WHITE), extrude(red, Z_RED)], engine="manifold", check_volume=False)
+    parts = [extrude(base, Z_BLACK)] + [extrude(g, z) for g, z in ((white, Z_WHITE), (red, Z_RED)) if not g.is_empty and g.area > 0.05]
+    m = trimesh.boolean.union(parts, engine="manifold", check_volume=False)
     m.apply_translation([-m.bounds[0][0], -m.bounds[0][1], 0])
     return m, white, red
 
 
-def preview(base, white, red, path):
+RGB = {"black": (26, 26, 26), "white": (245, 245, 245), "red": (200, 16, 46)}
+
+
+def preview(base, white, red, path, stack=("black", "white", "red")):
     """Top-view render: each colour layer rasterised as its own mask (holes respected), then composited."""
     b = base.bounds
     s = 24
@@ -208,21 +213,21 @@ def preview(base, white, red, path):
         return Image.fromarray(m)
     img = Image.new("RGB", (W, H), (205, 214, 224))
     img.paste((150, 158, 168), (0, 0), mask(base, 3, 4))
-    img.paste((26, 26, 26), (0, 0), mask(base))
-    img.paste((245, 245, 245), (0, 0), mask(white))
-    img.paste((200, 16, 46), (0, 0), mask(red))
+    for g, c in zip((base, white, red), stack):
+        img.paste(RGB[c], (0, 0), mask(g))
     img.save(path)
 
 
 # ---------------- Bambu project ----------------
-def write_3mf(mesh, out_path, profiles, ams, positions):
+def write_3mf(mesh, out_path, profiles, ams, positions, stack=("black", "white", "red")):
+    """stack = colour of each layer band from the bottom: Z 0-1.6, 1.6-2.4, 2.4-3.0 (2 or 3 bands)."""
     m = mesh.copy()
     m.apply_translation(-m.bounds.mean(axis=0))
     hz = m.extents[2] / 2
     U = lambda: str(uuid.uuid4())
     now = datetime.date.today().isoformat()
     n_fil = 3 if ams else 1
-    cfg = project_config(profiles, n_fil, COLOURS if ams else [COLOURS[0]])
+    cfg = project_config(profiles, n_fil, COLOURS if ams else [COLOURS[SLOT[stack[0]] - 1]])
     if ams:
         # purge volumes (mm3) row = from, col = to : black, white, red
         cfg["flush_volumes_matrix"] = ["0", "500", "300", "150", "0", "200", "200", "450", "0"]
@@ -265,12 +270,12 @@ def write_3mf(mesh, out_path, profiles, ams, positions):
 <config>
   <object id="2">
     <metadata key="name" value="uae55"/>
-    <metadata key="extruder" value="1"/>
+    <metadata key="extruder" value="{SLOT[stack[0]] if ams else 1}"/>
     <metadata face_count="{nf}"/>
     <part id="1" subtype="normal_part">
       <metadata key="name" value="uae55"/>
       <metadata key="matrix" value="1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1"/>
-      <metadata key="extruder" value="1"/>
+      <metadata key="extruder" value="{SLOT[stack[0]] if ams else 1}"/>
       <mesh_stat face_count="{nf}" edges_fixed="0" degenerate_facets="0" facets_removed="0" facets_reversed="0" backwards_edges="0"/>
     </part>
   </object>
@@ -285,13 +290,12 @@ def write_3mf(mesh, out_path, profiles, ams, positions):
   </assemble>
 </config>
 '''
+    changes = list(zip((1.8, 2.6), stack[1:]))
     if ams:
-        layers = (f'<layer top_z="1.8" type="2" extruder="2" color="{COLOURS[1]}" extra="" gcode="tool_change"/>\n'
-                  f'<layer top_z="2.6" type="2" extruder="3" color="{COLOURS[2]}" extra="" gcode="tool_change"/>')
+        layers = "\n".join(f'<layer top_z="{z}" type="2" extruder="{SLOT[c]}" color="{COLOURS[SLOT[c] - 1]}" extra="" gcode="tool_change"/>' for z, c in changes)
         mode = "MultiAsSingle"
     else:
-        layers = ('<layer top_z="1.8" type="1" extruder="1" color="" extra="Load WHITE filament" gcode="M400 U1"/>\n'
-                  '<layer top_z="2.6" type="1" extruder="1" color="" extra="Load RED filament" gcode="M400 U1"/>')
+        layers = "\n".join(f'<layer top_z="{z}" type="1" extruder="1" color="" extra="Load {c.upper()} filament" gcode="M400 U1"/>' for z, c in changes)
         mode = "SingleExtruder"
     custom = f'<?xml version="1.0" encoding="utf-8"?>\n<custom_gcodes_per_layer>\n<plate>\n<plate_info id="1"/>\n{layers}\n<mode value="{mode}"/>\n</plate>\n</custom_gcodes_per_layer>\n'
     ct = '<?xml version="1.0" encoding="UTF-8"?>\n<Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types">\n <Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/>\n <Default Extension="model" ContentType="application/vnd.ms-package.3dmanufacturing-3dmodel+xml"/>\n <Default Extension="png" ContentType="image/png"/>\n</Types>\n'
