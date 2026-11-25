@@ -13,6 +13,7 @@
 ## الملفات (`out/`)
 - `UTAS_keychain_P2S_PLA_AMS.3mf`: مشروع Bambu Studio جاهز (حبة وحدة). أسود ← أبيض تلقائياً بالـ AMS عند الطبقة 9
 - `UTAS_keychain_P2S_PLA_noAMS.3mf`: نفس الشي بدون AMS. الطابعة توقف عند الطبقة 9 عشان تحط الأبيض بيدك
+- `UTAS_keychain_P2S_PLA_FULLBED_70pcs_AMS.3mf` و`..._noAMS.3mf`: بد كامل فيه 70 حبة، جاهز Slice ثم Print
 - `keychain_single.stl`: ميدالية وحدة
 - `plate_30pcs.stl`: 30 حبة مرتبة على اللوحة
 - `plate_70pcs_full.stl`: 70 حبة، لوحة P2S كاملة (أقل هدر للحبة الوحدة)

@@ -107,7 +107,7 @@ def mesh_xml(mesh):
     return f"    <mesh>\n    <vertices>\n{v}\n    </vertices>\n    <triangles>\n{t}\n    </triangles>\n    </mesh>\n"
 
 
-def build(stl, out_path, profiles, variant):
+def build(stl, out_path, profiles, variant, positions=((128.0, 128.0),)):
     mesh = trimesh.load(stl)
     c = mesh.bounds.mean(axis=0)
     mesh.apply_translation(-c)                         # object centred at origin
@@ -118,6 +118,13 @@ def build(stl, out_path, profiles, variant):
     obj_name = "UTAS_keychain"
     now = datetime.date.today().isoformat()
 
+    items = "\n".join(f'  <item objectid="2" p:UUID="{U()}" transform="1 0 0 0 1 0 0 0 1 {x:.4f} {y:.4f} {hz:.5f}" printable="1"/>' for x, y in positions)
+    instances = "\n".join(f'''    <model_instance>
+      <metadata key="object_id" value="2"/>
+      <metadata key="instance_id" value="{i}"/>
+      <metadata key="identify_id" value="{101 + i}"/>
+    </model_instance>''' for i in range(len(positions)))
+    assemble = "\n".join(f'   <assemble_item object_id="2" instance_id="{i}" transform="1 0 0 0 1 0 0 0 1 {x:.4f} {y:.4f} {hz:.5f}" offset="0 0 0" />' for i, (x, y) in enumerate(positions))
     model_main = f'''<?xml version="1.0" encoding="UTF-8"?>
 <model unit="millimeter" xml:lang="en-US" xmlns="http://schemas.microsoft.com/3dmanufacturing/core/2015/02" xmlns:BambuStudio="http://schemas.bambulab.com/package/2021" xmlns:p="http://schemas.microsoft.com/3dmanufacturing/production/2015/06" requiredextensions="p">
  <metadata name="Application">BambuStudio-{APP_VERSION}</metadata>
@@ -133,7 +140,7 @@ def build(stl, out_path, profiles, variant):
   </object>
  </resources>
  <build p:UUID="{U()}">
-  <item objectid="2" p:UUID="{U()}" transform="1 0 0 0 1 0 0 0 1 128 128 {hz:.5f}" printable="1"/>
+{items}
  </build>
 </model>
 '''
@@ -165,14 +172,10 @@ def build(stl, out_path, profiles, variant):
     <metadata key="plater_id" value="1"/>
     <metadata key="plater_name" value=""/>
     <metadata key="locked" value="false"/>
-    <model_instance>
-      <metadata key="object_id" value="2"/>
-      <metadata key="instance_id" value="0"/>
-      <metadata key="identify_id" value="101"/>
-    </model_instance>
+{instances}
   </plate>
   <assemble>
-   <assemble_item object_id="2" instance_id="0" transform="1 0 0 0 1 0 0 0 1 128 128 {hz:.5f}" offset="0 0 0" />
+{assemble}
   </assemble>
 </config>
 '''
@@ -232,3 +235,9 @@ if __name__ == "__main__":
     profs = load_profiles(a.profiles)
     for v in ("AMS", "noAMS"):
         build(a.stl, os.path.join(HERE, "out", f"{a.name}_{v}.3mf"), profs, v)
+    # full bed: 10 x 7 = 70 pieces, 4 mm apart, centred on the 256 x 256 plate
+    m = trimesh.load(a.stl); w, d = m.extents[:2]; gap = 4.0; cols, rows = 10, 7
+    W, D = cols * w + (cols - 1) * gap, rows * d + (rows - 1) * gap
+    pos = [(128 - W / 2 + w / 2 + i * (w + gap), 128 - D / 2 + d / 2 + j * (d + gap)) for j in range(rows) for i in range(cols)]
+    for v in ("AMS", "noAMS"):
+        build(a.stl, os.path.join(HERE, "out", f"{a.name}_FULLBED_{len(pos)}pcs_{v}.3mf"), profs, v, pos)
