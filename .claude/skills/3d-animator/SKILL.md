@@ -198,3 +198,11 @@ Details and scripts are in `references/present.md` and `kit/present/`.
 ## Running in a Claude Code cloud sandbox (added on install)
 
 These Linux cloud machines run as root with no GPU. In the project's `render.mjs`, add `'--no-sandbox', '--use-gl=angle', '--use-angle=swiftshader', '--enable-unsafe-swiftshader'` to the Chrome `args`, install with `PUPPETEER_SKIP_DOWNLOAD=1 npm install`, and render with `CHROME_PATH=/opt/pw-browsers/chromium-1243/chrome-linux64/chrome` (or whichever `/opt/pw-browsers/chromium-*/chrome-linux64/chrome` exists). Rendering is software-only: about 5 s per frame at `--n=4`, so estimate and warn before long renders.
+
+What the skill needs, and how to get it on a fresh machine:
+- npm packages: `npm install` in `kit/` and in each recipe folder (use `PUPPETEER_SKIP_DOWNLOAD=1` in the recipes; they use puppeteer-core).
+- Puppeteer's Chrome: `cd kit && npx puppeteer browsers install chrome` (and `chrome-headless-shell`). They land in `~/.cache/puppeteer/`. This sandbox sets `PUPPETEER_EXECUTABLE_PATH`, so pass `CHROME_PATH`/`CHROME` explicitly.
+- Recipe fonts: Apple's DIN fonts are not free, so `recipes/*/src/fonts/DINCondensed-Bold.ttf` and `DINAlternate-Bold.ttf` are Barlow Condensed Bold (SIL OFL, licence alongside), as RECIPE.md suggests.
+- Preview server: `npm install -g http-server` (or `python3 -m http.server`).
+- Whisper word timing: `uv tool install openai-whisper --with torch --index https://download.pytorch.org/whl/cpu --index-strategy unsafe-best-match`; the `small.en` model downloads to `~/.cache/whisper/` on first use (needs openaipublic.azureedge.net, download.pytorch.org and download-r2.pytorch.org allowed).
+- Python: numpy and Pillow. ffmpeg/ffprobe. Optional: ELEVENLABS_API_KEY in a git-ignored `.env` for voices and sound effects.
