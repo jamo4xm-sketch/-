@@ -1,0 +1,4 @@
+<!doctype html><meta charset="utf-8"><style>html,body{margin:0;background:#777}canvas{display:block;width:1008px;height:1788px}</style><canvas id="c" width="1008" height="1788"></canvas>
+<script type="importmap">{"imports":{"three":"./node_modules/three/build/three.module.js","three/addons/":"./node_modules/three/examples/jsm/"}}</script>
+<script type="module">import './src/looks4.js'; import { makeRail } from './src/rail.js'; const r = makeRail(document.getElementById('c'), 1008, 1788); const Q = new URLSearchParams(location.search), LIST = (Q.get('looks') || 'mosaic,origami,topo,stitch,lava,porcelain,marquetry,riso,jade,charcoal').split(','), N = +(Q.get('n') || 8); window.total = LIST.length * 1.25;
+window.renderAt = (t) => { const i = Math.min(LIST.length - 1, Math.floor(t / 1.25 + 1e-6)); r.draw(0.35 + t, LIST[i], N); }; window.renderAt(0); window.__ready = true;</script>

@@ -1,0 +1,4 @@
+<!doctype html><meta charset="utf-8"><style>html,body{margin:0;background:#777}canvas{display:block;width:504px;height:894px}</style><canvas id="c" width="1008" height="1788"></canvas>
+<script type="importmap">{"imports":{"three":"./node_modules/three/build/three.module.js","three/addons/":"./node_modules/three/examples/jsm/"}}</script>
+<script type="module">import { makeRocket, LOOKS } from './src/rocket2.js'; const r = makeRocket(document.getElementById('c'), 1008, 1788); const Q = new URLSearchParams(location.search), LIST = (Q.get('looks') || LOOKS.join(',')).split(','), N = +(Q.get('n') || 8); window.total = LIST.length * 1.25;
+window.renderAt = (t) => { const i = Math.min(LIST.length - 1, Math.floor(t / 1.25 + 1e-6)); r.draw(0.35 + t, LIST[i], N, t - i * 1.25); }; window.renderAt(0); window.__ready = true;</script>
