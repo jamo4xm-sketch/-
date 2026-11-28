@@ -1,0 +1,325 @@
+[
+ {
+  "name": "case",
+  "label": "Mid-tower case",
+  "file": "stl/case.stl",
+  "web": "web/case.json",
+  "color": "#2a2e35",
+  "explode": [
+   0,
+   0,
+   0
+  ],
+  "triangles": 75580,
+  "size_mm": [
+   220.0,
+   460.0,
+   510.0
+  ],
+  "watertight": true
+ },
+ {
+  "name": "glass_panel",
+  "label": "Tempered glass side panel",
+  "file": "stl/glass_panel.stl",
+  "web": "web/glass_panel.json",
+  "color": "#9fb7c9",
+  "explode": [
+   -260,
+   0,
+   0
+  ],
+  "triangles": 396,
+  "size_mm": [
+   8.0,
+   459.0,
+   499.0
+  ],
+  "watertight": true
+ },
+ {
+  "name": "motherboard",
+  "label": "ATX motherboard (PCB)",
+  "file": "stl/motherboard.stl",
+  "web": "web/motherboard.json",
+  "color": "#1b2420",
+  "explode": [
+   -25,
+   0,
+   0
+  ],
+  "triangles": 624,
+  "size_mm": [
+   1.6,
+   244.0,
+   305.0
+  ],
+  "watertight": true
+ },
+ {
+  "name": "motherboard_heatsinks",
+  "label": "VRM, chipset and M.2 heatsinks, I/O",
+  "file": "stl/motherboard_heatsinks.stl",
+  "web": "web/motherboard_heatsinks.json",
+  "color": "#8d949e",
+  "explode": [
+   -45,
+   0,
+   0
+  ],
+  "triangles": 1016,
+  "size_mm": [
+   40.0,
+   227.0,
+   290.0
+  ],
+  "watertight": true
+ },
+ {
+  "name": "motherboard_slots",
+  "label": "DIMM, PCIe, power and SATA connectors",
+  "file": "stl/motherboard_slots.stl",
+  "web": "web/motherboard_slots.json",
+  "color": "#3c424b",
+  "explode": [
+   -35,
+   0,
+   0
+  ],
+  "triangles": 224,
+  "size_mm": [
+   15.0,
+   217.0,
+   276.5
+  ],
+  "watertight": true
+ },
+ {
+  "name": "cpu",
+  "label": "CPU",
+  "file": "stl/cpu.stl",
+  "web": "web/cpu.json",
+  "color": "#c7ccd3",
+  "explode": [
+   -80,
+   0,
+   0
+  ],
+  "triangles": 28,
+  "size_mm": [
+   4.0,
+   40.0,
+   40.0
+  ],
+  "watertight": true
+ },
+ {
+  "name": "ram",
+  "label": "2x DDR5 memory",
+  "file": "stl/ram.stl",
+  "web": "web/ram.json",
+  "color": "#d9dde2",
+  "explode": [
+   -120,
+   0,
+   0
+  ],
+  "triangles": 408,
+  "size_mm": [
+   37.0,
+   25.0,
+   131.0
+  ],
+  "watertight": true
+ },
+ {
+  "name": "cooler_fins",
+  "label": "Tower cooler fin stack",
+  "file": "stl/cooler_fins.stl",
+  "web": "web/cooler_fins.json",
+  "color": "#b9bec6",
+  "explode": [
+   -230,
+   0,
+   0
+  ],
+  "triangles": 556,
+  "size_mm": [
+   158.0,
+   60.0,
+   125.0
+  ],
+  "watertight": true
+ },
+ {
+  "name": "cooler_heatpipes",
+  "label": "Copper heatpipes",
+  "file": "stl/cooler_heatpipes.stl",
+  "web": "web/cooler_heatpipes.json",
+  "color": "#b87333",
+  "explode": [
+   -230,
+   0,
+   0
+  ],
+  "triangles": 1248,
+  "size_mm": [
+   154.0,
+   26.4,
+   56.4
+  ],
+  "watertight": true
+ },
+ {
+  "name": "cooler_fan",
+  "label": "Cooler fan 120 mm",
+  "file": "stl/cooler_fan.stl",
+  "web": "web/cooler_fan.json",
+  "color": "#e9ebee",
+  "explode": [
+   -230,
+   -90,
+   0
+  ],
+  "triangles": 1116,
+  "size_mm": [
+   120.0,
+   25.0,
+   120.0
+  ],
+  "watertight": true
+ },
+ {
+  "name": "gpu",
+  "label": "Graphics card",
+  "file": "stl/gpu.stl",
+  "web": "web/gpu.json",
+  "color": "#30353c",
+  "explode": [
+   -200,
+   0,
+   -120
+  ],
+  "triangles": 1876,
+  "size_mm": [
+   139.0,
+   307.0,
+   56.0
+  ],
+  "watertight": true
+ },
+ {
+  "name": "gpu_fans",
+  "label": "Graphics card fans",
+  "file": "stl/gpu_fans.stl",
+  "web": "web/gpu_fans.json",
+  "color": "#121417",
+  "explode": [
+   -200,
+   0,
+   -170
+  ],
+  "triangles": 1632,
+  "size_mm": [
+   85.7,
+   281.0,
+   16.0
+  ],
+  "watertight": true
+ },
+ {
+  "name": "psu",
+  "label": "ATX power supply",
+  "file": "stl/psu.stl",
+  "web": "web/psu.json",
+  "color": "#16181b",
+  "explode": [
+   0,
+   230,
+   -60
+  ],
+  "triangles": 12266,
+  "size_mm": [
+   150.0,
+   162.0,
+   90.0
+  ],
+  "watertight": true
+ },
+ {
+  "name": "drives",
+  "label": "3.5\" hard drive and 2.5\" SSD",
+  "file": "stl/drives.stl",
+  "web": "web/drives.json",
+  "color": "#6f7782",
+  "explode": [
+   0,
+   -180,
+   -40
+  ],
+  "triangles": 56,
+  "size_mm": [
+   101.6,
+   285.0,
+   115.0
+  ],
+  "watertight": true
+ },
+ {
+  "name": "fans_front",
+  "label": "3x 120 mm front intake fans",
+  "file": "stl/fans_front.stl",
+  "web": "web/fans_front.json",
+  "color": "#e9ebee",
+  "explode": [
+   0,
+   -160,
+   0
+  ],
+  "triangles": 3336,
+  "size_mm": [
+   120.0,
+   25.0,
+   370.0
+  ],
+  "watertight": true
+ },
+ {
+  "name": "fans_top",
+  "label": "2x 120 mm top exhaust fans",
+  "file": "stl/fans_top.stl",
+  "web": "web/fans_top.json",
+  "color": "#e9ebee",
+  "explode": [
+   0,
+   0,
+   160
+  ],
+  "triangles": 2232,
+  "size_mm": [
+   120.0,
+   245.0,
+   25.0
+  ],
+  "watertight": true
+ },
+ {
+  "name": "fan_rear",
+  "label": "120 mm rear exhaust fan",
+  "file": "stl/fan_rear.stl",
+  "web": "web/fan_rear.json",
+  "color": "#e9ebee",
+  "explode": [
+   0,
+   160,
+   0
+  ],
+  "triangles": 1116,
+  "size_mm": [
+   120.0,
+   25.0,
+   120.0
+  ],
+  "watertight": true
+ }
+]

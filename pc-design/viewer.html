@@ -1,0 +1,326 @@
+<title>Mid-Tower PC Build</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: a CAD-style workbench. Full-height 3D stage on the left, a parts
+   bill-of-materials panel on the right; stacked stage-then-panel on phones. */
+:root {
+  --bg: #eef0f3;
+  --stage: #dfe3e8;
+  --panel: #f8f9fb;
+  --ink: #171a1f;
+  --muted: #5b6370;
+  --line: #d3d8df;
+  --accent: #0f7b8a;
+  --accent-ink: #ffffff;
+  --chip: #e7eaef;
+  --font-display: "Space Grotesk", "Segoe UI", system-ui, sans-serif;
+  --font-body: "IBM Plex Sans", "Segoe UI", system-ui, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #111418; --stage: #171b21; --panel: #1b2027; --ink: #e8ebef; --muted: #98a2b0;
+    --line: #2b323c; --accent: #3cc3d4; --accent-ink: #062126; --chip: #252b34; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #111418; --stage: #171b21; --panel: #1b2027; --ink: #e8ebef; --muted: #98a2b0;
+  --line: #2b323c; --accent: #3cc3d4; --accent-ink: #062126; --chip: #252b34; color-scheme: dark;
+}
+html, body { height: 100%; }
+body {
+  background: var(--bg); color: var(--ink); font-family: var(--font-body);
+  display: grid; grid-template-columns: minmax(0, 1fr) 360px; height: 100%;
+}
+.stage { position: relative; background: var(--stage); min-width: 0; min-height: 0; }
+#view { position: absolute; inset: 0; width: 100%; height: 100%; display: block; touch-action: none; }
+.toolbar {
+  position: absolute; left: max(16px, env(safe-area-inset-left, 0px)); right: 16px; bottom: 16px;
+  display: flex; flex-wrap: wrap; gap: 8px; align-items: center; pointer-events: none;
+}
+.toolbar > * { pointer-events: auto; }
+.seg { display: flex; background: var(--panel); border: 1px solid var(--line); border-radius: 8px; overflow: hidden; }
+.seg button {
+  font: 500 13px var(--font-body); color: var(--ink); background: transparent; border: 0;
+  padding: 8px 12px; cursor: pointer; border-right: 1px solid var(--line);
+}
+.seg button:last-child { border-right: 0; }
+.seg button:hover { background: var(--chip); }
+.seg button[aria-pressed="true"] { background: var(--accent); color: var(--accent-ink); }
+button:focus-visible, input:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.explode {
+  display: flex; align-items: center; gap: 10px; background: var(--panel); border: 1px solid var(--line);
+  border-radius: 8px; padding: 6px 12px; font: 500 13px var(--font-body);
+}
+.explode input { width: 150px; accent-color: var(--accent); }
+.status {
+  position: absolute; top: 14px; left: max(16px, env(safe-area-inset-left, 0px));
+  font: 400 12px var(--font-mono); color: var(--muted); background: var(--panel);
+  border: 1px solid var(--line); border-radius: 6px; padding: 5px 9px;
+}
+.hint { position: absolute; top: 14px; right: 16px; font: 400 12px var(--font-body); color: var(--muted); }
+
+aside {
+  background: var(--panel); border-left: 1px solid var(--line); overflow-y: auto; min-width: 0;
+  padding-block: 22px 28px; padding-left: max(18px, env(safe-area-inset-left, 0px)); padding-right: max(18px, env(safe-area-inset-right, 0px));
+  display: flex; flex-direction: column; gap: 20px;
+}
+.eyebrow { font: 500 11px var(--font-mono); letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+h1 { font: 700 26px/1.1 var(--font-display); margin: 4px 0 6px; text-wrap: balance; }
+.lede { margin: 0; color: var(--muted); line-height: 1.5; font-size: 14px; }
+.specs { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1px; background: var(--line); border: 1px solid var(--line); border-radius: 8px; overflow: hidden; }
+.spec { background: var(--panel); padding: 10px; }
+.spec b { display: block; font: 500 15px var(--font-mono); font-variant-numeric: tabular-nums; }
+.spec span { font-size: 11px; color: var(--muted); }
+.toggles { display: flex; flex-wrap: wrap; gap: 8px; }
+.toggle { display: flex; align-items: center; gap: 6px; font-size: 13px; background: var(--chip); border-radius: 999px; padding: 5px 11px 5px 8px; cursor: pointer; }
+.toggle input { accent-color: var(--accent); margin: 0; }
+h2 { font: 700 15px var(--font-display); margin: 0 0 8px; display: flex; justify-content: space-between; align-items: baseline; }
+h2 small { font: 400 12px var(--font-mono); color: var(--muted); }
+.parts { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--line); }
+.part { display: grid; grid-template-columns: auto 14px minmax(0, 1fr); gap: 10px; align-items: start; padding: 9px 4px; border-bottom: 1px solid var(--line); cursor: pointer; }
+.part:hover, .part.hot { background: var(--chip); }
+.part input { margin: 2px 0 0; accent-color: var(--accent); }
+.swatch { width: 14px; height: 14px; border-radius: 3px; margin-top: 2px; border: 1px solid color-mix(in srgb, var(--ink) 25%, transparent); }
+.part .name { font-size: 13.5px; font-weight: 500; line-height: 1.3; }
+.part .meta { font: 400 11.5px var(--font-mono); color: var(--muted); font-variant-numeric: tabular-nums; margin-top: 2px; }
+.files { font-size: 13px; color: var(--muted); line-height: 1.55; }
+.files code { font-family: var(--font-mono); font-size: 12px; background: var(--chip); padding: 1px 5px; border-radius: 4px; color: var(--ink); }
+
+@media (max-width: 820px) {
+  body { grid-template-columns: minmax(0, 1fr); grid-template-rows: 62vh auto; height: auto; }
+  html, body { height: auto; }
+  aside { border-left: 0; border-top: 1px solid var(--line); overflow: visible; }
+  .explode input { width: 110px; }
+  .hint { display: none; }
+}
+@media (prefers-reduced-motion: reduce) { * { scroll-behavior: auto !important; } }
+</style>
+
+<main class="stage">
+  <canvas id="view" aria-label="3D view of the PC build. Drag to orbit, scroll or pinch to zoom."></canvas>
+  <div class="status" id="status">Loading parts…</div>
+  <div class="hint">Drag to orbit · scroll to zoom · right-drag to pan</div>
+  <div class="toolbar">
+    <div class="seg" role="group" aria-label="Camera view">
+      <button id="v-iso" data-view="iso" aria-pressed="true">3/4</button>
+      <button id="v-front" data-view="front" aria-pressed="false">Front</button>
+      <button id="v-side" data-view="side" aria-pressed="false">Glass side</button>
+      <button id="v-rear" data-view="rear" aria-pressed="false">Rear</button>
+      <button id="v-top" data-view="top" aria-pressed="false">Top</button>
+    </div>
+    <label class="explode" for="explode">Exploded view <input id="explode" type="range" min="0" max="1" step="0.01" value="0"></label>
+  </div>
+</main>
+
+<aside>
+  <header>
+    <div class="eyebrow">ATX mid-tower · full build · STL</div>
+    <h1>Mid-Tower PC Build</h1>
+    <p class="lede">Every part modelled at real size in millimetres and exported as its own STL. Hover a part to find it, untick it to hide it, or pull the build apart with the exploded view.</p>
+  </header>
+
+  <div class="specs" aria-label="Build summary">
+    <div class="spec"><b>220×460×510</b><span>case W×D×H, mm</span></div>
+    <div class="spec"><b id="s-parts">17</b><span>STL parts</span></div>
+    <div class="spec"><b id="s-tris">–</b><span>triangles</span></div>
+  </div>
+
+  <div class="toggles">
+    <label class="toggle" for="t-glass"><input id="t-glass" type="checkbox" checked> Glass panel</label>
+    <label class="toggle" for="t-case"><input id="t-case" type="checkbox" checked> Case</label>
+    <label class="toggle" for="t-wire"><input id="t-wire" type="checkbox"> Wireframe</label>
+    <label class="toggle" for="t-spin"><input id="t-spin" type="checkbox"> Turntable</label>
+  </div>
+
+  <section>
+    <h2>Bill of materials <small id="bom-count"></small></h2>
+    <ul class="parts" id="parts"></ul>
+  </section>
+
+  <section class="files">
+    <h2>The files</h2>
+    Each part is in <code>pc-design/stl/</code> in your repo, with <code>full_pc.stl</code> holding the whole machine. All files share one origin, so they line up when opened together. Units are millimetres, Z is up, and every part is a closed solid that slicers accept.
+  </section>
+</aside>
+
+<script type="importmap">
+{ "imports": {
+  "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+  "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+} }
+</script>
+<script type="module">
+import * as THREE from "three";
+import { OrbitControls } from "three/addons/controls/OrbitControls.js";
+
+const canvas = document.getElementById("view");
+const statusEl = document.getElementById("status");
+const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, preserveDrawingBuffer: true });
+renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+renderer.toneMapping = THREE.ACESFilmicToneMapping;
+renderer.toneMappingExposure = 1.05;
+
+const scene = new THREE.Scene();
+const camera = new THREE.PerspectiveCamera(32, 1, 5, 20000);
+const controls = new OrbitControls(camera, canvas);
+controls.enableDamping = true;
+controls.dampingFactor = 0.08;
+
+scene.add(new THREE.HemisphereLight(0xffffff, 0x50555c, 1.3));
+const key = new THREE.DirectionalLight(0xfff3e4, 2.4); key.position.set(-700, 900, 800); scene.add(key);
+const rim = new THREE.DirectionalLight(0xcfe6ff, 1.1); rim.position.set(700, 400, -900); scene.add(rim);
+
+// Parts are modelled Z-up in millimetres; turn the build so Z points up on screen.
+const build = new THREE.Group();
+build.rotation.x = -Math.PI / 2;
+scene.add(build);
+const CENTER = new THREE.Vector3(110, 230, 250);
+build.position.set(-CENTER.x, -CENTER.z, CENTER.y);
+
+const grid = new THREE.GridHelper(1400, 28, 0x888888, 0x888888);
+grid.position.y = -CENTER.z - 10;
+grid.material.transparent = true; grid.material.opacity = 0.18;
+scene.add(grid);
+
+function cssVar(name) { return getComputedStyle(document.documentElement).getPropertyValue(name).trim(); }
+function applyTheme() {
+  scene.background = new THREE.Color(cssVar("--stage") || "#dfe3e8");
+  const dark = scene.background.getHSL({ h: 0, s: 0, l: 0 }).l < 0.4;
+  grid.material.color.set(dark ? 0x9aa4b1 : 0x5b6370);
+}
+applyTheme();
+matchMedia("(prefers-color-scheme: dark)").addEventListener("change", applyTheme);
+new MutationObserver(applyTheme).observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
+
+const VIEWS = {
+  iso:   [-760, 420, 820],
+  front: [0, 40, 1150],
+  side:  [-1150, 40, 0],
+  rear:  [0, 40, -1150],
+  top:   [0, 1250, 1],
+};
+let tween = null;
+function setView(name, instant = false) {
+  const to = new THREE.Vector3(...VIEWS[name]);
+  document.querySelectorAll("[data-view]").forEach(b => b.setAttribute("aria-pressed", String(b.dataset.view === name)));
+  if (instant || matchMedia("(prefers-reduced-motion: reduce)").matches) { camera.position.copy(to); controls.target.set(0, 0, 0); return; }
+  tween = { from: camera.position.clone(), to, fromT: controls.target.clone(), t: 0 };
+}
+document.querySelectorAll("[data-view]").forEach(b => b.addEventListener("click", () => setView(b.dataset.view)));
+setView("iso", true);
+
+const meshes = {};
+let explodeT = 0;
+function applyExplode() {
+  for (const m of Object.values(meshes)) {
+    const e = m.userData.explode;
+    m.position.set(e[0] * explodeT, e[1] * explodeT, e[2] * explodeT);
+  }
+}
+document.getElementById("explode").addEventListener("input", e => { explodeT = +e.target.value; applyExplode(); });
+
+function setVisible(name, on) { if (meshes[name]) meshes[name].visible = on; const cb = document.getElementById("p-" + name); if (cb) cb.checked = on; }
+document.getElementById("t-glass").addEventListener("change", e => setVisible("glass_panel", e.target.checked));
+document.getElementById("t-case").addEventListener("change", e => setVisible("case", e.target.checked));
+document.getElementById("t-wire").addEventListener("change", e => {
+  for (const m of Object.values(meshes)) if (m.userData.name !== "glass_panel") m.material.wireframe = e.target.checked;
+});
+let spin = false;
+document.getElementById("t-spin").addEventListener("change", e => { spin = e.target.checked; });
+
+function highlight(name, on) {
+  const m = meshes[name]; if (!m || m.userData.name === "glass_panel") return;
+  m.material.emissive.set(on ? cssVar("--accent") : "#000000");
+  m.material.emissiveIntensity = on ? 0.55 : 0;
+  document.querySelector(`.part[data-name="${name}"]`)?.classList.toggle("hot", on);
+}
+
+function fmt(n) { return n.toLocaleString("en-US"); }
+
+// Each part ships as compact JSON (integer vertices + triangle indices) made from its STL.
+async function loadPart(p) {
+  const d = await (await fetch(p.web)).json();
+  const pos = new Float32Array(d.p.length);
+  for (let i = 0; i < d.p.length; i++) pos[i] = d.p[i] * d.scale;
+  let geo = new THREE.BufferGeometry();
+  geo.setAttribute("position", new THREE.BufferAttribute(pos, 3));
+  geo.setIndex(d.i);
+  geo = geo.toNonIndexed();          // flat faces, like the STL
+  geo.computeVertexNormals();
+  return geo;
+}
+
+async function load() {
+  const parts = await (await fetch("parts.json")).json();
+  const list = document.getElementById("parts");
+  const total = parts.reduce((s, p) => s + p.triangles, 0);
+  document.getElementById("s-tris").textContent = Math.round(total / 1000) + "k";
+  document.getElementById("s-parts").textContent = parts.length;
+  document.getElementById("bom-count").textContent = parts.length + " files";
+
+  for (const p of parts) {
+    const li = document.createElement("li");
+    li.className = "part"; li.dataset.name = p.name;
+    const [x, y, z] = p.size_mm;
+    li.innerHTML = `<input type="checkbox" id="p-${p.name}" checked aria-label="Show ${p.label}">
+      <span class="swatch" style="background:${p.color}"></span>
+      <div><div class="name">${p.label}</div><div class="meta">${p.name}.stl · ${x}×${y}×${z} mm · ${fmt(p.triangles)} tris</div></div>`;
+    li.querySelector("input").addEventListener("change", e => {
+      setVisible(p.name, e.target.checked);
+      if (p.name === "glass_panel") document.getElementById("t-glass").checked = e.target.checked;
+      if (p.name === "case") document.getElementById("t-case").checked = e.target.checked;
+    });
+    li.addEventListener("pointerenter", () => highlight(p.name, true));
+    li.addEventListener("pointerleave", () => highlight(p.name, false));
+    li.addEventListener("click", e => { if (e.target.tagName !== "INPUT") { const cb = li.querySelector("input"); cb.checked = !cb.checked; cb.dispatchEvent(new Event("change")); } });
+    list.appendChild(li);
+  }
+
+  let done = 0;
+  await Promise.all(parts.map(async p => {
+    const geo = await loadPart(p);
+    const glass = p.name === "glass_panel";
+    const mat = glass
+      ? new THREE.MeshPhysicalMaterial({ color: p.color, transparent: true, opacity: 0.16, roughness: 0.05, metalness: 0, depthWrite: false, side: THREE.DoubleSide })
+      : new THREE.MeshStandardMaterial({ color: p.color, roughness: p.name.includes("heatpipe") ? 0.3 : 0.55, metalness: /heatsink|fins|heatpipe|cpu/.test(p.name) ? 0.7 : 0.25 });
+    const mesh = new THREE.Mesh(geo, mat);
+    mesh.userData = { name: p.name, explode: p.explode };
+    if (glass) mesh.renderOrder = 10;
+    meshes[p.name] = mesh;
+    build.add(mesh);
+    done += 1;
+    statusEl.textContent = `Loading parts ${done}/${parts.length}`;
+  }));
+  applyExplode();
+  statusEl.textContent = `${parts.length} parts · ${fmt(total)} triangles · mm`;
+}
+load().catch(err => { statusEl.textContent = "Could not load the parts: " + err.message; });
+
+function resize() {
+  const r = canvas.parentElement.getBoundingClientRect();
+  renderer.setSize(r.width, r.height, false);
+  camera.aspect = r.width / Math.max(r.height, 1);
+  camera.updateProjectionMatrix();
+}
+new ResizeObserver(resize).observe(canvas.parentElement);
+resize();
+
+function frame() {
+  if (tween) {
+    tween.t = Math.min(1, tween.t + 0.045);
+    const k = tween.t < 0.5 ? 2 * tween.t * tween.t : 1 - Math.pow(-2 * tween.t + 2, 2) / 2;
+    camera.position.lerpVectors(tween.from, tween.to, k);
+    controls.target.lerpVectors(tween.fromT, new THREE.Vector3(), k);
+    if (tween.t >= 1) tween = null;
+  }
+  if (spin && !tween) build.parent.rotation.y += 0.004;
+  controls.update();
+  renderer.render(scene, camera);
+  requestAnimationFrame(frame);
+}
+frame();
+window.__pcViewer = { setView, setExplode: v => { explodeT = v; applyExplode(); }, meshes };
+</script>
